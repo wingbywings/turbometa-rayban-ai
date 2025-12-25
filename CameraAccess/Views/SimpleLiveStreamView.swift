@@ -105,7 +105,7 @@ struct SimpleLiveStreamView: View {
             // 启动视频流
             Task {
                 print("🎥 SimpleLiveStreamView: 启动视频流")
-                await streamViewModel.handleStartStreaming()
+                await streamViewModel.handleStartStreaming(for: .liveStream)
             }
         }
         .onDisappear {

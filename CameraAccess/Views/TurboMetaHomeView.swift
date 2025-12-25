@@ -11,6 +11,7 @@ struct TurboMetaHomeView: View {
     let apiKey: String
 
     @State private var showLiveAI = false
+    @State private var showLiveChat = false
     @State private var showLiveStream = false
     @State private var showLeanEat = false
 
@@ -56,13 +57,12 @@ struct TurboMetaHomeView: View {
                                 }
 
                                 FeatureCard(
-                                    title: NSLocalizedString("home.translate.title", comment: "Translate title"),
-                                    subtitle: NSLocalizedString("home.translate.subtitle", comment: "Translate subtitle"),
-                                    icon: "text.bubble",
-                                    gradient: [AppColors.translate, AppColors.translate.opacity(0.7)],
-                                    isPlaceholder: true
+                                    title: NSLocalizedString("home.livechat.title", comment: "Live Chat title"),
+                                    subtitle: NSLocalizedString("home.livechat.subtitle", comment: "Live Chat subtitle"),
+                                    icon: "mic.fill",
+                                    gradient: [AppColors.translate, AppColors.translate.opacity(0.7)]
                                 ) {
-                                    // Placeholder
+                                    showLiveChat = true
                                 }
                             }
 
@@ -106,6 +106,9 @@ struct TurboMetaHomeView: View {
             .navigationBarHidden(true)
             .fullScreenCover(isPresented: $showLiveAI) {
                 LiveAIView(streamViewModel: streamViewModel, apiKey: apiKey)
+            }
+            .fullScreenCover(isPresented: $showLiveChat) {
+                LiveChatView(streamViewModel: streamViewModel, apiKey: apiKey)
             }
             .fullScreenCover(isPresented: $showLiveStream) {
                 SimpleLiveStreamView(streamViewModel: streamViewModel)

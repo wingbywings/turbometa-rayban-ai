@@ -27,7 +27,9 @@ struct MainAppView: View {
   init(wearables: WearablesInterface, viewModel: WearablesViewModel) {
     self.wearables = wearables
     self.viewModel = viewModel
-    self._streamViewModel = StateObject(wrappedValue: StreamSessionViewModel(wearables: wearables))
+    self._streamViewModel = StateObject(
+      wrappedValue: StreamSessionViewModel(wearables: wearables, qualitySettings: .shared)
+    )
   }
 
   var body: some View {
@@ -42,6 +44,7 @@ struct MainAppView: View {
       } else {
         // 权限已检查，显示主界面
         MainTabView(streamViewModel: streamViewModel, wearablesViewModel: viewModel)
+          .environmentObject(AIQualitySettings.shared)
       }
     } else {
       // 未注册 - 显示注册/引导流程

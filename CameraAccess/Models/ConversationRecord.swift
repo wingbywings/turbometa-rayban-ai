@@ -70,7 +70,7 @@ struct ConversationRecord: Identifiable, Codable {
 // Make ConversationMessage Codable
 extension ConversationMessage: Codable {
     enum CodingKeys: String, CodingKey {
-        case id, role, content, timestamp
+        case id, role, content, timestamp, imageAttachments
     }
 
     init(from decoder: Decoder) throws {
@@ -79,12 +79,17 @@ extension ConversationMessage: Codable {
         let roleString = try container.decode(String.self, forKey: .role)
         let content = try container.decode(String.self, forKey: .content)
         let timestamp = try container.decode(Date.self, forKey: .timestamp)
+        let imageAttachments = try container.decodeIfPresent(
+            [ConversationImageAttachment].self,
+            forKey: .imageAttachments
+        ) ?? []
 
         self.init(
             id: id,
             role: roleString == "user" ? .user : .assistant,
             content: content,
-            timestamp: timestamp
+            timestamp: timestamp,
+            imageAttachments: imageAttachments
         )
     }
 
@@ -94,12 +99,8 @@ extension ConversationMessage: Codable {
         try container.encode(role == .user ? "user" : "assistant", forKey: .role)
         try container.encode(content, forKey: .content)
         try container.encode(timestamp, forKey: .timestamp)
-    }
-}
-
-// Add timestamp to ConversationMessage if not present
-extension ConversationMessage {
-    init(id: UUID = UUID(), role: MessageRole, content: String, timestamp: Date = Date()) {
-        self.init(role: role, content: content)
+        if !imageAttachments.isEmpty {
+            try container.encode(imageAttachments, forKey: .imageAttachments)
+        }
     }
 }

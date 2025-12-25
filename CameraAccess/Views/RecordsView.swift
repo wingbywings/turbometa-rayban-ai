@@ -122,26 +122,30 @@ struct LiveAIRecordsView: View {
                         .padding(.horizontal, AppSpacing.xl)
                 }
             } else {
-                // Conversation list
-                ScrollView {
-                    LazyVStack(spacing: AppSpacing.md) {
-                        ForEach(viewModel.conversations) { conversation in
-                            ConversationCell(conversation: conversation)
-                                .onTapGesture {
-                                    selectedConversation = conversation
-                                    showDetail = true
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        viewModel.deleteConversation(conversation.id)
-                                    } label: {
-                                        Label("删除", systemImage: "trash")
-                                    }
-                                }
-                        }
+                List {
+                    ForEach(viewModel.conversations) { conversation in
+                        ConversationCell(conversation: conversation)
+                            .listRowInsets(
+                                EdgeInsets(
+                                    top: AppSpacing.sm,
+                                    leading: AppSpacing.md,
+                                    bottom: AppSpacing.sm,
+                                    trailing: AppSpacing.md
+                                )
+                            )
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedConversation = conversation
+                                showDetail = true
+                            }
                     }
-                    .padding(AppSpacing.md)
+                    .onDelete(perform: deleteConversations)
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(AppColors.secondaryBackground)
                 .refreshable {
                     viewModel.loadConversations()
                 }
@@ -154,6 +158,13 @@ struct LiveAIRecordsView: View {
             if let conversation = selectedConversation {
                 ConversationDetailView(conversation: conversation)
             }
+        }
+    }
+
+    private func deleteConversations(at offsets: IndexSet) {
+        for index in offsets {
+            let conversation = viewModel.conversations[index]
+            viewModel.deleteConversation(conversation.id)
         }
     }
 }

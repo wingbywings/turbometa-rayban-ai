@@ -85,7 +85,7 @@ struct NonStreamView: View {
           isDisabled: !viewModel.hasActiveDevice
         ) {
           Task {
-            await viewModel.handleStartStreaming()
+            await viewModel.handleStartStreaming(for: .defaultView)
           }
         }
       }

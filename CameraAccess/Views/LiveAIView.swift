@@ -99,14 +99,14 @@ struct LiveAIView: View {
             // 启动视频流
             Task {
                 print("🎥 LiveAIView: 启动视频流")
-                await streamViewModel.handleStartStreaming()
+                await streamViewModel.handleStartStreaming(for: .liveAI)
             }
 
             // 自动连接并开始录音
             viewModel.connect()
 
             // 更新视频帧
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
                 if let frame = streamViewModel.currentVideoFrame {
                     viewModel.updateVideoFrame(frame)
                 }

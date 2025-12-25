@@ -18,6 +18,7 @@
 import Foundation
 import MWDATCore
 import SwiftUI
+import UIKit
 
 #if DEBUG
 import MWDATMockDevice
@@ -25,6 +26,7 @@ import MWDATMockDevice
 
 @main
 struct TurboMetaApp: App {
+  @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
   #if DEBUG
   // Debug menu for simulating device connections during development
   @StateObject private var debugMenuViewModel = DebugMenuViewModel(mockDeviceKit: MockDeviceKit.shared)
@@ -71,5 +73,15 @@ struct TurboMetaApp: App {
       // Registration view handles the flow for connecting to the glasses via Meta AI
       RegistrationView(viewModel: wearablesViewModel)
     }
+  }
+}
+
+final class AppDelegate: NSObject, UIApplicationDelegate {
+  func applicationDidEnterBackground(_ application: UIApplication) {
+    AudioBackgroundSession.shared.begin()
+  }
+
+  func applicationWillEnterForeground(_ application: UIApplication) {
+    AudioBackgroundSession.shared.end()
   }
 }

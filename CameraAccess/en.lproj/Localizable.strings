@@ -19,6 +19,8 @@
 "home.liveai.subtitle" = "Real-time Chat";
 "home.translate.title" = "Live Translate";
 "home.translate.subtitle" = "Instant Translation";
+"home.livechat.title" = "Live Chat";
+"home.livechat.subtitle" = "Audio-only AI";
 "home.leaneat.title" = "LeanEat";
 "home.leaneat.subtitle" = "Calorie Recognition";
 "home.wordlearn.title" = "WordLearn";
@@ -37,6 +39,17 @@
 "liveai.device.notconnected.title" = "RayBan Meta Glasses Not Connected";
 "liveai.device.notconnected.message" = "Please connect your smart glasses on the home screen first,\\nthen use the Live AI feature";
 "liveai.device.backtohome" = "Back to Home";
+
+// MARK: - Live Chat
+"livechat.title" = "Live Chat";
+"livechat.connected" = "Connected";
+"livechat.connecting" = "Connecting...";
+"livechat.speaking" = "AI Speaking";
+"livechat.listening" = "Listening...";
+"livechat.stop" = "Stop";
+"livechat.device.notconnected.title" = "RayBan Meta Glasses Not Connected";
+"livechat.device.notconnected.message" = "Please connect your smart glasses on the home screen first,\\nthen use the Live Chat feature";
+"livechat.device.backtohome" = "Back to Home";
 
 // MARK: - Stream View (Camera)
 "stream.title" = "Camera";
@@ -97,7 +110,22 @@
 "settings.title" = "Settings";
 "settings.account" = "Account Settings";
 "settings.api" = "API Settings";
+"settings.ai.vision" = "AI Vision Settings";
+"settings.ai.vision.preview" = "Preview Resolution";
+"settings.ai.vision.image" = "AI Image";
+"settings.ai.vision.restart" = "Restart video stream to apply changes";
+"settings.ai.vision.preview.low" = "Low";
+"settings.ai.vision.preview.medium" = "Medium";
+"settings.ai.vision.preview.high" = "High";
+"settings.ai.vision.image.resolution" = "AI Image Resolution";
+"settings.ai.vision.image.quality" = "AI Image Quality";
+"settings.ai.vision.keyframes" = "Keyframes";
+"settings.ai.vision.keyframes.1" = "1 Frame";
+"settings.ai.vision.keyframes.2" = "2 Frames";
+"settings.ai.vision.keyframes.3" = "3 Frames";
+"settings.ai.vision.keyframes.tip" = "More keyframes increase clarity and power usage";
 "settings.model" = "Model Settings";
+"settings.ai.section" = "AI Settings";
 "settings.about" = "About";
 "settings.version" = "Version";
 "settings.logout" = "Logout";

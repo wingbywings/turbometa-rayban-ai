@@ -19,6 +19,8 @@
 "home.liveai.subtitle" = "实时对话";
 "home.translate.title" = "实时翻译";
 "home.translate.subtitle" = "即时翻译";
+"home.livechat.title" = "Live Chat";
+"home.livechat.subtitle" = "纯语音对话";
 "home.leaneat.title" = "LeanEat";
 "home.leaneat.subtitle" = "卡路里识别";
 "home.wordlearn.title" = "WordLearn";
@@ -37,6 +39,17 @@
 "liveai.device.notconnected.title" = "未连接RayBan Meta眼镜";
 "liveai.device.notconnected.message" = "请先在首页连接你的智能眼镜，\n然后再使用Live AI功能";
 "liveai.device.backtohome" = "返回首页";
+
+// MARK: - Live Chat
+"livechat.title" = "Live Chat";
+"livechat.connected" = "已连接";
+"livechat.connecting" = "连接中...";
+"livechat.speaking" = "AI 说话中";
+"livechat.listening" = "正在听...";
+"livechat.stop" = "停止";
+"livechat.device.notconnected.title" = "未连接RayBan Meta眼镜";
+"livechat.device.notconnected.message" = "请先在首页连接你的智能眼镜，\n然后再使用Live Chat功能";
+"livechat.device.backtohome" = "返回首页";
 
 // MARK: - Stream View (Camera)
 "stream.title" = "拍照";
@@ -97,7 +110,22 @@
 "settings.title" = "我的";
 "settings.account" = "账号设置";
 "settings.api" = "API 设置";
+"settings.ai.vision" = "AI 视觉设置";
+"settings.ai.vision.preview" = "预览清晰度";
+"settings.ai.vision.image" = "AI 图像";
+"settings.ai.vision.restart" = "修改后需重启视频流才能生效";
+"settings.ai.vision.preview.low" = "低清";
+"settings.ai.vision.preview.medium" = "中清";
+"settings.ai.vision.preview.high" = "高清";
+"settings.ai.vision.image.resolution" = "AI 图片分辨率";
+"settings.ai.vision.image.quality" = "AI 图片质量";
+"settings.ai.vision.keyframes" = "关键帧数量";
+"settings.ai.vision.keyframes.1" = "1 帧";
+"settings.ai.vision.keyframes.2" = "2 帧";
+"settings.ai.vision.keyframes.3" = "3 帧";
+"settings.ai.vision.keyframes.tip" = "关键帧越多越清晰，但耗电/流量更高";
 "settings.model" = "模型设置";
+"settings.ai.section" = "AI 设置";
 "settings.about" = "关于";
 "settings.version" = "版本";
 "settings.logout" = "退出登录";

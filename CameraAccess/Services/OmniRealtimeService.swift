@@ -79,6 +79,7 @@ class OmniRealtimeService: NSObject {
     private var isRecording = false
     private var hasAudioBeenSent = false
     private var eventIdCounter = 0
+    private var isAudioSessionConfigured = false
 
     init(apiKey: String) {
         self.apiKey = apiKey
@@ -114,6 +115,18 @@ class OmniRealtimeService: NSObject {
         playbackEngine.connect(playerNode, to: playbackEngine.mainMixerNode, format: audioFormat)
 
         print("✅ [Omni] 播放引擎初始化完成: PCM16 @ 24kHz")
+    }
+
+    private func configureAudioSessionIfNeeded(_ audioSession: AVAudioSession) throws {
+        guard !isAudioSessionConfigured else { return }
+        // Allow Bluetooth to use the glasses' microphone and keep audio in background
+        try audioSession.setCategory(
+            .playAndRecord,
+            mode: .voiceChat,
+            options: [.allowBluetooth, .allowBluetoothA2DP]
+        )
+        try audioSession.setActive(true, options: [.notifyOthersOnDeactivation])
+        isAudioSessionConfigured = true
     }
 
     private func startPlaybackEngine() {
@@ -220,9 +233,7 @@ class OmniRealtimeService: NSObject {
 
             let audioSession = AVAudioSession.sharedInstance()
 
-            // Allow Bluetooth to use the glasses' microphone
-            try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.allowBluetooth, .allowBluetoothA2DP])
-            try audioSession.setActive(true)
+            try configureAudioSessionIfNeeded(audioSession)
 
             guard let engine = audioEngine else {
                 print("❌ [Omni] 音频引擎未初始化")
@@ -320,8 +331,10 @@ class OmniRealtimeService: NSObject {
         sendEvent(event)
     }
 
-    func sendImageAppend(_ image: UIImage) {
-        guard let imageData = image.jpegData(compressionQuality: 0.6) else {
+    func sendImageAppend(_ image: UIImage, maxDimension: Int = 768, quality: Double = 0.8) {
+        let normalizedQuality = min(max(quality, 0.6), 0.95)
+        let resizedImage = resizeImage(image, maxDimension: maxDimension)
+        guard let imageData = resizedImage.jpegData(compressionQuality: normalizedQuality) else {
             print("❌ [Omni] 无法压缩图片")
             return
         }
@@ -538,6 +551,20 @@ class OmniRealtimeService: NSObject {
         }
 
         return buffer
+    }
+
+    private func resizeImage(_ image: UIImage, maxDimension: Int) -> UIImage {
+        guard maxDimension > 0 else { return image }
+        let size = image.size
+        let maxSide = max(size.width, size.height)
+        guard maxSide > CGFloat(maxDimension) else { return image }
+
+        let scale = CGFloat(maxDimension) / maxSide
+        let targetSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 
     // MARK: - Helpers

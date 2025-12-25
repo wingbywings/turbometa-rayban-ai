@@ -13,9 +13,11 @@ struct SettingsView: View {
     @State private var showAPIKeySettings = false
     @State private var showModelSettings = false
     @State private var showLanguageSettings = false
+    @State private var showAIQualitySettings = false
     @State private var selectedModel = "qwen3-omni-flash-realtime"
     @State private var selectedLanguage = "zh-CN" // 默认中文
     @State private var hasAPIKey = false // 改为 State 变量
+    @StateObject private var aiQualitySettings = AIQualitySettings.shared
 
     init(streamViewModel: StreamSessionViewModel, apiKey: String) {
         self.streamViewModel = streamViewModel
@@ -77,6 +79,28 @@ struct SettingsView: View {
                 // AI 设置
                 Section {
                     Button {
+                        showAIQualitySettings = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "camera.filters")
+                                .foregroundColor(AppColors.secondary)
+                            Text(NSLocalizedString("settings.ai.vision", comment: "AI vision settings"))
+                                .foregroundColor(AppColors.textPrimary)
+                            Spacer()
+                            Text(previewResolutionLabel)
+                                .font(AppTypography.caption)
+                                .foregroundColor(AppColors.textSecondary)
+                            Image(systemName: "chevron.right")
+                                .font(AppTypography.caption)
+                                .foregroundColor(AppColors.textTertiary)
+                        }
+                    }
+
+                    Text(NSLocalizedString("settings.ai.vision.restart", comment: "Restart tip"))
+                        .font(AppTypography.caption)
+                        .foregroundColor(AppColors.textSecondary)
+
+                    Button {
                         showModelSettings = true
                     } label: {
                         HStack {
@@ -130,7 +154,7 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    Text("AI 设置")
+                    Text(NSLocalizedString("settings.ai.section", comment: "AI Settings"))
                 }
 
                 // 关于
@@ -154,6 +178,9 @@ struct SettingsView: View {
             .sheet(isPresented: $showModelSettings) {
                 ModelSettingsView(selectedModel: $selectedModel)
             }
+            .sheet(isPresented: $showAIQualitySettings) {
+                AIQualitySettingsView(settings: aiQualitySettings)
+            }
             .sheet(isPresented: $showLanguageSettings) {
                 LanguageSettingsView(selectedLanguage: $selectedLanguage)
             }
@@ -173,6 +200,17 @@ struct SettingsView: View {
         case "es-ES": return "Español"
         case "fr-FR": return "Français"
         default: return "中文"
+        }
+    }
+
+    private var previewResolutionLabel: String {
+        switch aiQualitySettings.previewResolution {
+        case .low:
+            return NSLocalizedString("settings.ai.vision.preview.low", comment: "Low")
+        case .medium:
+            return NSLocalizedString("settings.ai.vision.preview.medium", comment: "Medium")
+        case .high:
+            return NSLocalizedString("settings.ai.vision.preview.high", comment: "High")
         }
     }
 }

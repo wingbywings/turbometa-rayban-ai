@@ -24,7 +24,9 @@ class ConversationStorage {
 
         // Keep only the most recent maxConversations
         if conversations.count > maxConversations {
+            let trimmedConversations = conversations.suffix(from: maxConversations)
             conversations = Array(conversations.prefix(maxConversations))
+            trimmedConversations.forEach { ConversationImageStorage.shared.deleteImages(in: $0) }
         }
 
         // Encode and save
@@ -64,6 +66,9 @@ class ConversationStorage {
 
     func deleteConversation(_ id: UUID) {
         var conversations = loadAllConversations()
+        if let record = conversations.first(where: { $0.id == id }) {
+            ConversationImageStorage.shared.deleteImages(in: record)
+        }
         conversations.removeAll { $0.id == id }
 
         if let encoded = try? JSONEncoder().encode(conversations) {
@@ -74,6 +79,7 @@ class ConversationStorage {
 
     func deleteAllConversations() {
         userDefaults.removeObject(forKey: conversationsKey)
+        ConversationImageStorage.shared.deleteAllImages()
         print("🗑️ [Storage] 清空所有对话")
     }
 

@@ -24,6 +24,13 @@ enum StreamingStatus {
   case stopped
 }
 
+enum StreamScenario {
+  case liveAI
+  case liveStream
+  case photo
+  case defaultView
+}
+
 @MainActor
 class StreamSessionViewModel: ObservableObject {
   @Published var currentVideoFrame: UIImage?
@@ -57,11 +64,14 @@ class StreamSessionViewModel: ObservableObject {
   private var errorListenerToken: AnyListenerToken?
   private var photoDataListenerToken: AnyListenerToken?
   private let wearables: WearablesInterface
+  private let qualitySettings: AIQualitySettings
   private let deviceSelector: AutoDeviceSelector
   private var deviceMonitorTask: Task<Void, Never>?
+  private var activeResolution: StreamingResolution = .low
 
-  init(wearables: WearablesInterface) {
+  init(wearables: WearablesInterface, qualitySettings: AIQualitySettings = .shared) {
     self.wearables = wearables
+    self.qualitySettings = qualitySettings
     // Let the SDK auto-select from available devices
     self.deviceSelector = AutoDeviceSelector(wearables: wearables)
     let config = StreamSessionConfig(
@@ -69,6 +79,7 @@ class StreamSessionViewModel: ObservableObject {
       resolution: StreamingResolution.low,
       frameRate: 24)
     streamSession = StreamSession(streamSessionConfig: config, deviceSelector: deviceSelector)
+    activeResolution = .low
 
     // Monitor device availability
     deviceMonitorTask = Task { @MainActor in
@@ -77,6 +88,10 @@ class StreamSessionViewModel: ObservableObject {
       }
     }
 
+    configureStreamSessionListeners()
+  }
+
+  private func configureStreamSessionListeners() {
     // Subscribe to session state changes using the DAT SDK listener pattern
     // State changes tell us when streaming starts, stops, or encounters issues
     stateListenerToken = streamSession.statePublisher.listen { [weak self] state in
@@ -128,6 +143,11 @@ class StreamSessionViewModel: ObservableObject {
   }
 
   func handleStartStreaming() async {
+    await handleStartStreaming(for: .defaultView)
+  }
+
+  func handleStartStreaming(for scenario: StreamScenario) async {
+    applyPreviewResolution(for: scenario)
     let permission = Permission.camera
     do {
       let status = try await wearables.checkPermissionStatus(permission)
@@ -147,10 +167,16 @@ class StreamSessionViewModel: ObservableObject {
   }
 
   func startSession() async {
+    await startSession(with: activeResolution)
+  }
+
+  func startSession(with resolution: StreamingResolution) async {
     // Reset to unlimited time when starting a new stream
     activeTimeLimit = .noLimit
     remainingTime = 0
     stopTimer()
+
+    await rebuildStreamSession(with: resolution)
 
     await streamSession.start()
   }
@@ -163,6 +189,51 @@ class StreamSessionViewModel: ObservableObject {
   func stopSession() async {
     stopTimer()
     await streamSession.stop()
+  }
+
+  private func applyPreviewResolution(for scenario: StreamScenario) {
+    let desiredResolution: StreamingResolution
+    switch scenario {
+    case .liveAI:
+      desiredResolution = mapResolutionSetting(qualitySettings.previewResolution)
+    case .liveStream:
+      desiredResolution = mapResolutionSetting(qualitySettings.previewResolution)
+    case .photo:
+      desiredResolution = .high
+    case .defaultView:
+      desiredResolution = .low
+    }
+
+    activeResolution = desiredResolution
+  }
+
+  private func mapResolutionSetting(_ setting: AIQualitySettings.PreviewResolution) -> StreamingResolution {
+    switch setting {
+    case .low:
+      return .low
+    case .medium:
+      return .medium
+    case .high:
+      return .high
+    }
+  }
+
+  private func rebuildStreamSession(with resolution: StreamingResolution) async {
+    stateListenerToken = nil
+    videoFrameListenerToken = nil
+    errorListenerToken = nil
+    photoDataListenerToken = nil
+
+    await streamSession.stop()
+    hasReceivedFirstFrame = false
+
+    let config = StreamSessionConfig(
+      videoCodec: VideoCodec.raw,
+      resolution: resolution,
+      frameRate: 24)
+    streamSession = StreamSession(streamSessionConfig: config, deviceSelector: deviceSelector)
+    configureStreamSessionListeners()
+    activeResolution = resolution
   }
 
   func dismissError() {

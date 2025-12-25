@@ -76,7 +76,7 @@ struct StreamView: View {
       // 自动启动视频流
       Task {
         print("🎥 StreamView: 启动视频流")
-        await viewModel.handleStartStreaming()
+        await viewModel.handleStartStreaming(for: .photo)
       }
     }
     .onDisappear {
