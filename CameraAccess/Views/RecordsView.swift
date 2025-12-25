@@ -35,21 +35,19 @@ struct RecordsView: View {
                 }
                 .background(AppColors.tertiaryBackground)
 
-                // Content
-                TabView(selection: $selectedTab) {
-                    LiveAIRecordsView()
-                        .tag(0)
-
-                    TranslationRecordsView()
-                        .tag(1)
-
-                    LeanEatRecordsView()
-                        .tag(2)
-
-                    WordLearnRecordsView()
-                        .tag(3)
+                // Content (disable swipe paging to allow list swipe actions)
+                Group {
+                    switch selectedTab {
+                    case 0:
+                        LiveAIRecordsView()
+                    case 1:
+                        TranslationRecordsView()
+                    case 2:
+                        LeanEatRecordsView()
+                    default:
+                        WordLearnRecordsView()
+                    }
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
             }
             .navigationTitle("记录")
         }
