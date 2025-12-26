@@ -251,7 +251,7 @@ class OmniRealtimeService: NSObject {
             engine.prepare()
             try engine.start()
 
-            isRecording = true
+            isRecording = true  
             print("✅ [Omni] 录音已启动")
 
         } catch {
