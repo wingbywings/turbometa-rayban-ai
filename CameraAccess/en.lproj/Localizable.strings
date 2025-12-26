@@ -51,6 +51,20 @@
 "livechat.device.notconnected.message" = "Please connect your smart glasses on the home screen first,\\nthen use the Live Chat feature";
 "livechat.device.backtohome" = "Back to Home";
 
+// MARK: - Live Translate
+"livetranslate.title" = "Live Translate";
+"livetranslate.connected" = "Connected";
+"livetranslate.connecting" = "Connecting...";
+"livetranslate.listening" = "Listening...";
+"livetranslate.stop" = "Stop";
+"livetranslate.language.chinese" = "Chinese";
+"livetranslate.language.english" = "English";
+"livetranslate.source" = "Source";
+"livetranslate.translation" = "Translation";
+"livetranslate.device.notconnected.title" = "RayBan Meta Glasses Not Connected";
+"livetranslate.device.notconnected.message" = "Please connect your smart glasses on the home screen first,\\nthen use the Live Translate feature";
+"livetranslate.device.backtohome" = "Back to Home";
+
 // MARK: - Stream View (Camera)
 "stream.title" = "Camera";
 "stream.stop" = "Stop streaming";

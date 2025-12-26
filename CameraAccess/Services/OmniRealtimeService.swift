@@ -37,6 +37,13 @@ enum OmniServerEvent: String {
 // MARK: - Service Class
 
 class OmniRealtimeService: NSObject {
+    static let defaultInstructions = """
+    你是RayBan Meta智能眼镜AI助手。
+
+    【重要】必须始终用中文回答，无论用户说什么语言。
+
+    回答要简练、口语化，像朋友聊天一样。用户戴着眼镜可以看到周围环境，根据画面快速给出有用的建议。不要啰嗦，直接说重点。
+    """
 
     // WebSocket
     private var webSocket: URLSessionWebSocketTask?
@@ -46,6 +53,10 @@ class OmniRealtimeService: NSObject {
     private let apiKey: String
     private let model = "qwen3-omni-flash-realtime"
     private let baseURL = "wss://dashscope.aliyuncs.com/api-ws/v1/realtime"
+    private var sessionInstructions: String
+    private let sessionVoice = "Cherry"
+    private let inputAudioFormat = "pcm16"
+    private let outputAudioFormat = "pcm24"
 
     // Audio Engine (for recording)
     private var audioEngine: AVAudioEngine?
@@ -81,8 +92,9 @@ class OmniRealtimeService: NSObject {
     private var eventIdCounter = 0
     private var isAudioSessionConfigured = false
 
-    init(apiKey: String) {
+    init(apiKey: String, sessionInstructions: String = OmniRealtimeService.defaultInstructions) {
         self.apiKey = apiKey
+        self.sessionInstructions = sessionInstructions
         super.init()
         setupAudioEngine()
     }
@@ -194,16 +206,26 @@ class OmniRealtimeService: NSObject {
     // MARK: - Session Configuration
 
     private func configureSession() {
-        let sessionConfig: [String: Any] = [
+        sendEvent(makeSessionConfig())
+    }
+
+    func updateSessionInstructions(_ instructions: String) {
+        sessionInstructions = instructions
+        guard webSocket != nil else { return }
+        sendEvent(makeSessionConfig())
+    }
+
+    private func makeSessionConfig() -> [String: Any] {
+        [
             "event_id": generateEventId(),
             "type": OmniClientEvent.sessionUpdate.rawValue,
             "session": [
                 "modalities": ["text", "audio"],
-                "voice": "Cherry",
-                "input_audio_format": "pcm16",
-                "output_audio_format": "pcm24",
+                "voice": sessionVoice,
+                "input_audio_format": inputAudioFormat,
+                "output_audio_format": outputAudioFormat,
                 "smooth_output": true,
-                "instructions": "你是RayBan Meta智能眼镜AI助手。\n\n【重要】必须始终用中文回答，无论用户说什么语言。\n\n回答要简练、口语化，像朋友聊天一样。用户戴着眼镜可以看到周围环境，根据画面快速给出有用的建议。不要啰嗦，直接说重点。",
+                "instructions": sessionInstructions,
                 "turn_detection": [
                     "type": "server_vad",
                     "threshold": 0.5,
@@ -211,8 +233,6 @@ class OmniRealtimeService: NSObject {
                 ]
             ]
         ]
-
-        sendEvent(sessionConfig)
     }
 
     // MARK: - Audio Recording

@@ -51,6 +51,20 @@
 "livechat.device.notconnected.message" = "请先在首页连接你的智能眼镜，\n然后再使用Live Chat功能";
 "livechat.device.backtohome" = "返回首页";
 
+// MARK: - Live Translate
+"livetranslate.title" = "实时翻译";
+"livetranslate.connected" = "已连接";
+"livetranslate.connecting" = "连接中...";
+"livetranslate.listening" = "正在听...";
+"livetranslate.stop" = "停止";
+"livetranslate.language.chinese" = "中文";
+"livetranslate.language.english" = "English";
+"livetranslate.source" = "原文";
+"livetranslate.translation" = "译文";
+"livetranslate.device.notconnected.title" = "未连接RayBan Meta眼镜";
+"livetranslate.device.notconnected.message" = "请先在首页连接你的智能眼镜，\n然后再使用实时翻译功能";
+"livetranslate.device.backtohome" = "返回首页";
+
 // MARK: - Stream View (Camera)
 "stream.title" = "拍照";
 "stream.stop" = "Stop streaming";

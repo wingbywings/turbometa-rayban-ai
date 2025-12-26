@@ -11,19 +11,22 @@ struct ConversationRecord: Identifiable, Codable {
     let messages: [ConversationMessage]
     let aiModel: String
     let language: String
+    let category: ConversationCategory
 
     init(
         id: UUID = UUID(),
         timestamp: Date = Date(),
         messages: [ConversationMessage],
         aiModel: String = "qwen3-omni-flash-realtime",
-        language: String = "zh-CN"
+        language: String = "zh-CN",
+        category: ConversationCategory = .liveAI
     ) {
         self.id = id
         self.timestamp = timestamp
         self.messages = messages
         self.aiModel = aiModel
         self.language = language
+        self.category = category
     }
 
     // Computed properties
@@ -64,6 +67,38 @@ struct ConversationRecord: Identifiable, Codable {
             formatter.dateFormat = "MM-dd HH:mm"
             return formatter.string(from: timestamp)
         }
+    }
+}
+
+enum ConversationCategory: String, Codable {
+    case liveAI
+    case liveTranslate
+    case liveChat
+}
+
+extension ConversationRecord {
+    enum CodingKeys: String, CodingKey {
+        case id, timestamp, messages, aiModel, language, category
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        timestamp = try container.decode(Date.self, forKey: .timestamp)
+        messages = try container.decode([ConversationMessage].self, forKey: .messages)
+        aiModel = try container.decode(String.self, forKey: .aiModel)
+        language = try container.decode(String.self, forKey: .language)
+        category = try container.decodeIfPresent(ConversationCategory.self, forKey: .category) ?? .liveAI
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(timestamp, forKey: .timestamp)
+        try container.encode(messages, forKey: .messages)
+        try container.encode(aiModel, forKey: .aiModel)
+        try container.encode(language, forKey: .language)
+        try container.encode(category, forKey: .category)
     }
 }
 

@@ -25,10 +25,6 @@ struct RecordsView: View {
                         RecordTabButton(title: "LeanEat", isSelected: selectedTab == 2) {
                             selectedTab = 2
                         }
-
-                        RecordTabButton(title: "WordLearn", isSelected: selectedTab == 3) {
-                            selectedTab = 3
-                        }
                     }
                     .padding(.horizontal, AppSpacing.lg)
                     .padding(.vertical, AppSpacing.md)
@@ -45,7 +41,7 @@ struct RecordsView: View {
                     case 2:
                         LeanEatRecordsView()
                     default:
-                        WordLearnRecordsView()
+                        LeanEatRecordsView()
                     }
                 }
             }
@@ -93,9 +89,8 @@ struct RecordTabButton: View {
 // MARK: - Live AI Records
 
 struct LiveAIRecordsView: View {
-    @StateObject private var viewModel = ConversationListViewModel()
+    @StateObject private var viewModel = ConversationListViewModel(categoryFilter: .liveAI)
     @State private var selectedConversation: ConversationRecord?
-    @State private var showDetail = false
 
     var body: some View {
         ZStack {
@@ -122,7 +117,11 @@ struct LiveAIRecordsView: View {
             } else {
                 List {
                     ForEach(viewModel.conversations) { conversation in
-                        ConversationCell(conversation: conversation)
+                        ConversationCell(
+                            conversation: conversation,
+                            iconName: "brain.head.profile",
+                            accentColor: AppColors.liveAI
+                        )
                             .listRowInsets(
                                 EdgeInsets(
                                     top: AppSpacing.sm,
@@ -136,7 +135,6 @@ struct LiveAIRecordsView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 selectedConversation = conversation
-                                showDetail = true
                             }
                     }
                     .onDelete(perform: deleteConversations)
@@ -152,10 +150,8 @@ struct LiveAIRecordsView: View {
         .onAppear {
             viewModel.loadConversations()
         }
-        .sheet(isPresented: $showDetail) {
-            if let conversation = selectedConversation {
-                ConversationDetailView(conversation: conversation)
-            }
+        .sheet(item: $selectedConversation) { conversation in
+            ConversationDetailView(conversation: conversation)
         }
     }
 
@@ -167,14 +163,97 @@ struct LiveAIRecordsView: View {
     }
 }
 
-// MARK: - Conversation List ViewModel
+// MARK: - Translation Records
+
+struct TranslationRecordsView: View {
+    @StateObject private var viewModel = ConversationListViewModel(categoryFilter: .liveTranslate)
+    @State private var selectedConversation: ConversationRecord?
+
+    var body: some View {
+        ZStack {
+            AppColors.secondaryBackground
+                .ignoresSafeArea()
+
+            if viewModel.conversations.isEmpty {
+                VStack(spacing: AppSpacing.lg) {
+                    Image(systemName: "text.bubble")
+                        .font(.system(size: 64))
+                        .foregroundColor(AppColors.translate.opacity(0.6))
+
+                    Text("暂无实时翻译记录")
+                        .font(AppTypography.title2)
+                        .foregroundColor(AppColors.textPrimary)
+
+                    Text("使用实时翻译后记录将显示在这里")
+                        .font(AppTypography.subheadline)
+                        .foregroundColor(AppColors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, AppSpacing.xl)
+                }
+            } else {
+                List {
+                    ForEach(viewModel.conversations) { conversation in
+                        ConversationCell(
+                            conversation: conversation,
+                            iconName: "text.bubble",
+                            accentColor: AppColors.translate
+                        )
+                        .listRowInsets(
+                            EdgeInsets(
+                                top: AppSpacing.sm,
+                                leading: AppSpacing.md,
+                                bottom: AppSpacing.sm,
+                                trailing: AppSpacing.md
+                            )
+                        )
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedConversation = conversation
+                        }
+                    }
+                    .onDelete(perform: deleteConversations)
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(AppColors.secondaryBackground)
+                .refreshable {
+                    viewModel.loadConversations()
+                }
+            }
+        }
+        .onAppear {
+            viewModel.loadConversations()
+        }
+        .sheet(item: $selectedConversation) { conversation in
+            ConversationDetailView(conversation: conversation)
+        }
+    }
+
+    private func deleteConversations(at offsets: IndexSet) {
+        for index in offsets {
+            let conversation = viewModel.conversations[index]
+            viewModel.deleteConversation(conversation.id)
+        }
+    }
+}
 
 @MainActor
 class ConversationListViewModel: ObservableObject {
     @Published var conversations: [ConversationRecord] = []
+    private let categoryFilter: ConversationCategory?
+
+    init(categoryFilter: ConversationCategory? = nil) {
+        self.categoryFilter = categoryFilter
+    }
 
     func loadConversations() {
-        conversations = ConversationStorage.shared.loadAllConversations()
+        var records = ConversationStorage.shared.loadAllConversations()
+        if let categoryFilter {
+            records = records.filter { $0.category == categoryFilter }
+        }
+        conversations = records
         print("📱 [RecordsView] 加载对话: \(conversations.count) 条")
     }
 
@@ -188,13 +267,25 @@ class ConversationListViewModel: ObservableObject {
 
 struct ConversationCell: View {
     let conversation: ConversationRecord
+    let iconName: String
+    let accentColor: Color
+
+    init(
+        conversation: ConversationRecord,
+        iconName: String = "brain.head.profile",
+        accentColor: Color = AppColors.liveAI
+    ) {
+        self.conversation = conversation
+        self.iconName = iconName
+        self.accentColor = accentColor
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.sm) {
             // Header
             HStack {
-                Image(systemName: "brain.head.profile")
-                    .foregroundColor(AppColors.liveAI)
+                Image(systemName: iconName)
+                    .foregroundColor(accentColor)
                     .font(AppTypography.headline)
 
                 Text(conversation.title)
@@ -245,31 +336,6 @@ struct ConversationCell: View {
     }
 }
 
-// MARK: - Translation Records
-
-struct TranslationRecordsView: View {
-    var body: some View {
-        ZStack {
-            AppColors.secondaryBackground
-                .ignoresSafeArea()
-
-            VStack(spacing: AppSpacing.lg) {
-                Image(systemName: "text.bubble")
-                    .font(.system(size: 64))
-                    .foregroundColor(AppColors.translate.opacity(0.6))
-
-                Text("暂无翻译记录")
-                    .font(AppTypography.title2)
-                    .foregroundColor(AppColors.textPrimary)
-
-                Text("功能即将上线")
-                    .font(AppTypography.subheadline)
-                    .foregroundColor(AppColors.textSecondary)
-            }
-        }
-    }
-}
-
 // MARK: - LeanEat Records
 
 struct LeanEatRecordsView: View {
@@ -284,31 +350,6 @@ struct LeanEatRecordsView: View {
                     .foregroundColor(AppColors.leanEat.opacity(0.6))
 
                 Text("暂无卡路里识别记录")
-                    .font(AppTypography.title2)
-                    .foregroundColor(AppColors.textPrimary)
-
-                Text("功能即将上线")
-                    .font(AppTypography.subheadline)
-                    .foregroundColor(AppColors.textSecondary)
-            }
-        }
-    }
-}
-
-// MARK: - WordLearn Records
-
-struct WordLearnRecordsView: View {
-    var body: some View {
-        ZStack {
-            AppColors.secondaryBackground
-                .ignoresSafeArea()
-
-            VStack(spacing: AppSpacing.lg) {
-                Image(systemName: "book.closed.fill")
-                    .font(.system(size: 64))
-                    .foregroundColor(AppColors.wordLearn.opacity(0.6))
-
-                Text("暂无单词学习记录")
                     .font(AppTypography.title2)
                     .foregroundColor(AppColors.textPrimary)
 

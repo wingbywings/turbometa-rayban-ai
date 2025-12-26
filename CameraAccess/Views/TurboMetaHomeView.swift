@@ -14,6 +14,7 @@ struct TurboMetaHomeView: View {
     @State private var showLiveChat = false
     @State private var showLiveStream = false
     @State private var showLeanEat = false
+    @State private var showLiveTranslate = false
 
     var body: some View {
         NavigationView {
@@ -78,13 +79,12 @@ struct TurboMetaHomeView: View {
                                 }
 
                                 FeatureCard(
-                                    title: NSLocalizedString("home.wordlearn.title", comment: "WordLearn title"),
-                                    subtitle: NSLocalizedString("home.wordlearn.subtitle", comment: "WordLearn subtitle"),
-                                    icon: "book.closed.fill",
-                                    gradient: [AppColors.wordLearn, AppColors.wordLearn.opacity(0.7)],
-                                    isPlaceholder: true
+                                    title: NSLocalizedString("home.translate.title", comment: "Live Translate title"),
+                                    subtitle: NSLocalizedString("home.translate.subtitle", comment: "Live Translate subtitle"),
+                                    icon: "text.bubble",
+                                    gradient: [AppColors.translate, AppColors.translate.opacity(0.7)]
                                 ) {
-                                    // Placeholder
+                                    showLiveTranslate = true
                                 }
                             }
 
@@ -115,6 +115,9 @@ struct TurboMetaHomeView: View {
             }
             .fullScreenCover(isPresented: $showLeanEat) {
                 StreamView(viewModel: streamViewModel, wearablesVM: wearablesViewModel)
+            }
+            .fullScreenCover(isPresented: $showLiveTranslate) {
+                LiveTranslateView(streamViewModel: streamViewModel, apiKey: apiKey)
             }
         }
     }

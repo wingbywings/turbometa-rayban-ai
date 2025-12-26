@@ -29,6 +29,7 @@
 		4BA57AD32EF8227E002EC214 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB32EF8227E002EC214 /* MainTabView.swift */; };
 		4BA57AD42EF8227E002EC214 /* LiveAIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB12EF8227E002EC214 /* LiveAIView.swift */; };
 		4BA57B022EF8227E002EC214 /* LiveChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57B012EF8227E002EC214 /* LiveChatView.swift */; };
+		4BA57B1B2F8A2222002EC214 /* LiveTranslateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57B1A2F8A2222002EC214 /* LiveTranslateView.swift */; };
 		4BA57AD52EF8227E002EC214 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB22EF8227E002EC214 /* MainAppView.swift */; };
 		4BA57AD62EF8227E002EC214 /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AAD2EF8227E002EC214 /* DebugMenuView.swift */; };
 		4BA57AD72EF8227E002EC214 /* MockDeviceKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A982EF8227E002EC214 /* MockDeviceKitViewModel.swift */; };
@@ -132,6 +133,7 @@
 		4BA57AB02EF8227E002EC214 /* LeanEatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanEatView.swift; sourceTree = "<group>"; };
 		4BA57AB12EF8227E002EC214 /* LiveAIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveAIView.swift; sourceTree = "<group>"; };
 		4BA57B012EF8227E002EC214 /* LiveChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatView.swift; sourceTree = "<group>"; };
+		4BA57B1A2F8A2222002EC214 /* LiveTranslateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTranslateView.swift; sourceTree = "<group>"; };
 		4BA57B072EF8227E002EC214 /* AIQualitySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIQualitySettingsView.swift; sourceTree = "<group>"; };
 		4BA57AB22EF8227E002EC214 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		4BA57AB32EF8227E002EC214 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 				4BA57AB02EF8227E002EC214 /* LeanEatView.swift */,
 				4BA57AB12EF8227E002EC214 /* LiveAIView.swift */,
 				4BA57B012EF8227E002EC214 /* LiveChatView.swift */,
+				4BA57B1A2F8A2222002EC214 /* LiveTranslateView.swift */,
 				4BA57AB22EF8227E002EC214 /* MainAppView.swift */,
 				4BA57AB32EF8227E002EC214 /* MainTabView.swift */,
 				4BA57AB42EF8227E002EC214 /* NonStreamView.swift */,
@@ -488,6 +491,7 @@
 				4BA57AD42EF8227E002EC214 /* LiveAIView.swift in Sources */,
 				4BA57B082EF8227E002EC214 /* AIQualitySettingsView.swift in Sources */,
 				4BA57B022EF8227E002EC214 /* LiveChatView.swift in Sources */,
+				4BA57B1B2F8A2222002EC214 /* LiveTranslateView.swift in Sources */,
 				4BA57AD52EF8227E002EC214 /* MainAppView.swift in Sources */,
 				4BA57AD62EF8227E002EC214 /* DebugMenuView.swift in Sources */,
 				4BA57AD72EF8227E002EC214 /* MockDeviceKitViewModel.swift in Sources */,

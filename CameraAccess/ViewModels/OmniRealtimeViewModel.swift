@@ -25,6 +25,8 @@ class OmniRealtimeViewModel: ObservableObject {
     private let apiKey: String
     private let enableImageInput: Bool
     private let qualitySettings: AIQualitySettings
+    private let recordCategory: ConversationCategory
+    private var recordLanguage: String
     private var isSessionActive = false
     private var shouldReconnectOnForeground = false
     private var shouldRestartRecording = false
@@ -40,11 +42,20 @@ class OmniRealtimeViewModel: ObservableObject {
     private var pendingImageAttachments: [ConversationImageAttachment] = []
     private var pendingUserMessageID: UUID?
 
-    init(apiKey: String, enableImageInput: Bool = true, qualitySettings: AIQualitySettings = .shared) {
+    init(
+        apiKey: String,
+        enableImageInput: Bool = true,
+        qualitySettings: AIQualitySettings = .shared,
+        sessionInstructions: String = OmniRealtimeService.defaultInstructions,
+        recordCategory: ConversationCategory = .liveAI,
+        recordLanguage: String = "zh-CN"
+    ) {
         self.apiKey = apiKey
         self.enableImageInput = enableImageInput
         self.qualitySettings = qualitySettings
-        self.omniService = OmniRealtimeService(apiKey: apiKey)
+        self.recordCategory = recordCategory
+        self.recordLanguage = recordLanguage
+        self.omniService = OmniRealtimeService(apiKey: apiKey, sessionInstructions: sessionInstructions)
         setupCallbacks()
         registerAppLifecycleObservers()
     }
@@ -236,7 +247,8 @@ class OmniRealtimeViewModel: ObservableObject {
         let record = ConversationRecord(
             messages: conversationHistory,
             aiModel: "qwen3-omni-flash-realtime",
-            language: "zh-CN" // TODO: 从设置中获取
+            language: recordLanguage,
+            category: recordCategory
         )
 
         ConversationStorage.shared.saveConversation(record)
@@ -339,6 +351,14 @@ class OmniRealtimeViewModel: ObservableObject {
 
     func dismissError() {
         showError = false
+    }
+
+    func updateSessionInstructions(_ instructions: String) {
+        omniService.updateSessionInstructions(instructions)
+    }
+
+    func updateRecordLanguage(_ language: String) {
+        recordLanguage = language
     }
 
     private func registerAppLifecycleObservers() {
