@@ -426,7 +426,7 @@ class OmniRealtimeViewModel: ObservableObject {
         return false
     }
 
-    nonisolated deinit {
+    deinit {
         notificationTokens.forEach { NotificationCenter.default.removeObserver($0) }
         Task { @MainActor [weak omniService] in
             omniService?.disconnect()
