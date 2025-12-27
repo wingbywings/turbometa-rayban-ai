@@ -86,14 +86,13 @@ struct LiveChatView: View {
             }
 
             viewModel.connect()
+            attemptStartRecordingIfReady()
         }
         .onChange(of: viewModel.isConnected) { isConnected in
-            if isConnected && !viewModel.isRecording {
-                viewModel.startRecording()
-            }
             if !isConnected && viewModel.isRecording {
                 viewModel.stopRecording()
             }
+            attemptStartRecordingIfReady()
         }
         .onDisappear {
             viewModel.disconnect()
@@ -301,5 +300,14 @@ struct LiveChatView: View {
             .padding(.horizontal, AppSpacing.xl)
             .padding(.bottom, AppSpacing.xl)
         }
+    }
+
+    private var isReadyToStartRecording: Bool {
+        viewModel.isConnected
+    }
+
+    private func attemptStartRecordingIfReady() {
+        guard isReadyToStartRecording else { return }
+        viewModel.startRecording()
     }
 }

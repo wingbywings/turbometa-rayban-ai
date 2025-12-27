@@ -12,11 +12,13 @@ final class WalkIntoMovieViewModel: ObservableObject {
     @Published var isAnalyzing = false
     @Published var result: WalkIntoMovieResult?
     @Published var errorMessage: String?
+    @Published var isSocketConnected = false
+    @Published var isSocketConnecting = false
+    @Published var capturedImage: UIImage?
 
     private let omniService: OmniRealtimeService
     private let qualitySettings: AIQualitySettings
     private var analysisTask: Task<Void, Never>?
-    private var isConnected = false
     private var currentTranscript = ""
 
     init(apiKey: String, qualitySettings: AIQualitySettings = .shared) {
@@ -51,13 +53,17 @@ final class WalkIntoMovieViewModel: ObservableObject {
     func stop() {
         analysisTask?.cancel()
         omniService.disconnect()
-        isConnected = false
+        isSocketConnected = false
+        isSocketConnecting = false
+        isAnalyzing = false
+        capturedImage = nil
     }
 
     private func setupCallbacks() {
         omniService.onConnected = { [weak self] in
             Task { @MainActor [weak self] in
-                self?.isConnected = true
+                self?.isSocketConnected = true
+                self?.isSocketConnecting = false
             }
         }
 
@@ -74,6 +80,9 @@ final class WalkIntoMovieViewModel: ObservableObject {
                 guard let self else { return }
                 let finalText = text.isEmpty ? self.currentTranscript : text
                 self.currentTranscript = finalText
+                if !finalText.isEmpty {
+                    print("[WalkIntoMovie] AI response: \(finalText)")
+                }
                 self.result = WalkIntoMovieService.parseResult(from: finalText)
                 self.isAnalyzing = false
             }
@@ -90,10 +99,17 @@ final class WalkIntoMovieViewModel: ObservableObject {
 
         omniService.onError = { [weak self] message in
             Task { @MainActor [weak self] in
-                self?.errorMessage = message
-                self?.isAnalyzing = false
+                guard let self else { return }
+                self.errorMessage = message
+                self.isAnalyzing = false
+                self.resetConnection()
             }
         }
+    }
+
+    func prepareConnection() {
+        errorMessage = nil
+        connectIfNeeded()
     }
 
     private func captureAndAnalyze(
@@ -104,10 +120,9 @@ final class WalkIntoMovieViewModel: ObservableObject {
         errorMessage = nil
         result = nil
         currentTranscript = ""
+        capturedImage = nil
 
-        omniService.disconnect()
-        isConnected = false
-        omniService.connect()
+        connectIfNeeded()
 
         let streamReadyOk = await waitForStreamReady(streamReady)
         guard streamReadyOk else {
@@ -120,6 +135,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
         guard connected else {
             errorMessage = NSLocalizedString("error.network", comment: "Network error")
             isAnalyzing = false
+            resetConnection()
             return
         }
 
@@ -141,13 +157,16 @@ final class WalkIntoMovieViewModel: ObservableObject {
             return
         }
 
+        capturedImage = frame
+
         let maxDimension = qualitySettings.aiImageMaxDimension.rawValue
         let quality = qualitySettings.aiImageQuality
         omniService.sendUserMessage(
             text: WalkIntoMovieService.userPrompt,
             image: frame,
             maxDimension: maxDimension,
-            quality: quality
+            quality: quality,
+            maxImageBase64Length: 200_000
         )
         omniService.requestResponse()
     }
@@ -177,11 +196,23 @@ final class WalkIntoMovieViewModel: ObservableObject {
     private func waitForConnection() async -> Bool {
         let attempts = 20
         for _ in 0..<attempts {
-            if isConnected {
+            if isSocketConnected {
                 return true
             }
             try? await Task.sleep(nanoseconds: 150_000_000)
         }
-        return isConnected
+        return isSocketConnected
+    }
+
+    private func connectIfNeeded() {
+        guard !isSocketConnected, !isSocketConnecting else { return }
+        isSocketConnecting = true
+        omniService.connect()
+    }
+
+    private func resetConnection() {
+        omniService.disconnect()
+        isSocketConnected = false
+        isSocketConnecting = false
     }
 }

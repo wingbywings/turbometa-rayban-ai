@@ -207,6 +207,7 @@ class OmniRealtimeViewModel: ObservableObject {
         }
         if !isSessionActive {
             hasSavedConversation = false
+            resetConversationState()
         }
         isSessionActive = true
         shouldIgnoreErrors = UIApplication.shared.applicationState != .active
@@ -259,6 +260,19 @@ class OmniRealtimeViewModel: ObservableObject {
         guard !hasSavedConversation else { return }
         hasSavedConversation = true
         saveConversation()
+    }
+
+    private func resetConversationState() {
+        if !pendingImageAttachments.isEmpty {
+            ConversationImageStorage.shared.deleteImages(pendingImageAttachments)
+        }
+        pendingImageAttachments = []
+        pendingUserMessageID = nil
+        currentTranscript = ""
+        conversationHistory = []
+        errorMessage = nil
+        showError = false
+        isSpeaking = false
     }
 
     // MARK: - Recording

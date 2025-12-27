@@ -85,7 +85,9 @@
 // MARK: - Walk Into Movie
 "movie.title" = "走进电影";
 "movie.analyzing" = "正在感知电影氛围...";
+"movie.connecting" = "正在连接视频流与AI...";
 "movie.ready" = "准备就绪，正在取景...";
+"movie.start" = "开始";
 "movie.retry" = "再来一次";
 "movie.error.title" = "识别失败";
 "movie.error.noframe" = "未获取到清晰画面，请稍后重试";

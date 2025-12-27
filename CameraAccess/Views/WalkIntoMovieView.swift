@@ -42,15 +42,15 @@ struct WalkIntoMovieView: View {
 
             Task(priority: .utility) {
                 await streamViewModel.handleStartStreaming(for: .walkIntoMovie)
-                viewModel.startExperience(
-                    frameProvider: { streamViewModel.currentVideoFrame },
-                    streamReady: {
-                        streamViewModel.streamingStatus == .streaming
-                            && streamViewModel.hasReceivedFirstFrame
-                            && streamViewModel.currentVideoFrame != nil
-                    }
-                )
             }
+            viewModel.prepareConnection()
+        }
+        .onChange(of: streamViewModel.hasActiveDevice) { hasDevice in
+            guard hasDevice else { return }
+            Task(priority: .utility) {
+                await streamViewModel.handleStartStreaming(for: .walkIntoMovie)
+            }
+            viewModel.prepareConnection()
         }
         .onDisappear {
             viewModel.stop()
@@ -105,6 +105,15 @@ struct WalkIntoMovieView: View {
     @ViewBuilder
     private var resultPanel: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
+            if let capturedImage = viewModel.capturedImage {
+                Image(uiImage: capturedImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 140)
+                    .clipped()
+                    .cornerRadius(AppCornerRadius.md)
+            }
             if viewModel.isAnalyzing {
                 HStack(spacing: AppSpacing.sm) {
                     ProgressView()
@@ -136,16 +145,54 @@ struct WalkIntoMovieView: View {
                     }
                 }
                 retryButton
-            } else {
+            } else if isReadyToStart {
                 Text(NSLocalizedString("movie.ready", comment: "Preparing"))
                     .font(AppTypography.subheadline)
                     .foregroundColor(.white.opacity(0.85))
+                startButton
+            } else {
+                connectingView
             }
         }
         .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.black.opacity(0.7))
         .cornerRadius(AppCornerRadius.lg)
+    }
+
+    private var connectingView: some View {
+        HStack(spacing: AppSpacing.sm) {
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+            Text(NSLocalizedString("movie.connecting", comment: "Connecting"))
+                .font(AppTypography.subheadline)
+                .foregroundColor(.white)
+        }
+    }
+
+    private var startButton: some View {
+        Button {
+            viewModel.startExperience(
+                frameProvider: { streamViewModel.currentVideoFrame },
+                streamReady: {
+                    streamViewModel.streamingStatus == .streaming
+                        && streamViewModel.hasReceivedFirstFrame
+                        && streamViewModel.currentVideoFrame != nil
+                }
+            )
+        } label: {
+            HStack(spacing: AppSpacing.sm) {
+                Image(systemName: "play.fill")
+                Text(NSLocalizedString("movie.start", comment: "Start"))
+            }
+            .font(AppTypography.headline)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, AppSpacing.md)
+            .background(AppColors.walkIntoMovie)
+            .cornerRadius(AppCornerRadius.lg)
+        }
+        .disabled(viewModel.isAnalyzing)
     }
 
     private var retryButton: some View {
@@ -212,5 +259,15 @@ struct WalkIntoMovieView: View {
             .padding(.horizontal, AppSpacing.xl)
             .padding(.bottom, AppSpacing.xl)
         }
+    }
+
+    private var isStreamReady: Bool {
+        streamViewModel.streamingStatus == .streaming
+            && streamViewModel.hasReceivedFirstFrame
+            && streamViewModel.currentVideoFrame != nil
+    }
+
+    private var isReadyToStart: Bool {
+        isStreamReady && viewModel.isSocketConnected
     }
 }

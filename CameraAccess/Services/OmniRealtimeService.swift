@@ -375,7 +375,8 @@ class OmniRealtimeService: NSObject {
         text: String,
         image: UIImage?,
         maxDimension: Int = 768,
-        quality: Double = 0.8
+        quality: Double = 0.8,
+        maxImageBase64Length: Int? = nil
     ) {
         var content: [[String: Any]] = []
         let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -386,16 +387,32 @@ class OmniRealtimeService: NSObject {
             ])
         }
 
-        if let image,
-           let base64Image = encodeImageBase64(
-            image,
-            maxDimension: maxDimension,
-            quality: quality
-           ) {
-            content.append([
-                "type": "input_image",
-                "image": base64Image
-            ])
+        if let image {
+            let base64Image: String?
+            if let maxImageBase64Length {
+                base64Image = encodeImageBase64WithinLimit(
+                    image,
+                    maxDimension: maxDimension,
+                    quality: quality,
+                    maxBase64Length: maxImageBase64Length
+                )
+            } else {
+                base64Image = encodeImageBase64(
+                    image,
+                    maxDimension: maxDimension,
+                    quality: quality
+                )
+            }
+
+            if let base64Image {
+                content.append([
+                    "type": "input_image",
+                    "image": base64Image
+                ])
+            } else {
+                print("❌ [Omni] Image too large to send within WebSocket limit")
+                onError?("Image too large to send. Please try again.")
+            }
         }
 
         guard !content.isEmpty else {
@@ -655,6 +672,52 @@ class OmniRealtimeService: NSObject {
             return nil
         }
         return imageData.base64EncodedString()
+    }
+
+    private func encodeImageBase64WithinLimit(
+        _ image: UIImage,
+        maxDimension: Int,
+        quality: Double,
+        maxBase64Length: Int
+    ) -> String? {
+        let normalizedQuality = min(max(quality, 0.5), 0.95)
+        let rawDimensions = [
+            maxDimension,
+            min(maxDimension, 768),
+            min(maxDimension, 512),
+            min(maxDimension, 384),
+            min(maxDimension, 256)
+        ]
+        var dimensionCandidates: [Int] = []
+        for dimension in rawDimensions where dimension > 0 && !dimensionCandidates.contains(dimension) {
+            dimensionCandidates.append(dimension)
+        }
+
+        let rawQualities = [
+            normalizedQuality,
+            max(normalizedQuality - 0.15, 0.5),
+            max(normalizedQuality - 0.3, 0.5),
+            0.5
+        ]
+        var qualityCandidates: [Double] = []
+        for value in rawQualities where !qualityCandidates.contains(value) {
+            qualityCandidates.append(value)
+        }
+
+        for dimension in dimensionCandidates {
+            let resizedImage = resizeImage(image, maxDimension: dimension)
+            for quality in qualityCandidates {
+                guard let imageData = resizedImage.jpegData(compressionQuality: quality) else {
+                    continue
+                }
+                let base64Image = imageData.base64EncodedString()
+                if base64Image.count <= maxBase64Length {
+                    return base64Image
+                }
+            }
+        }
+
+        return nil
     }
 
     // MARK: - Helpers

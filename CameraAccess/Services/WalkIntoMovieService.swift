@@ -6,19 +6,19 @@
 import Foundation
 
 struct WalkIntoMovieService {
-    static let prompt2 = """
+    static let prompt = """
 你是一位擅长“走进电影”的氛围识别器。根据图片里的环境、光线、场景与情绪判断它像哪部电影 / 剧集 / 游戏。
 
 请只输出两行文本：
 第一行：一句话点题（示例：你现在像在《迷失东京》）
-第二行：氛围旁白（30-80字，具有画面感）
+第二行：氛围旁白（30-80字，描述图片的画面，并结合电影让描述具有画面感）
 
 要求：
 - 使用中文
 - 不要输出编号、引号、Markdown 或解释
 """
     
-    static let prompt = """
+    static let prompt2 = """
 你是一个“现实世界电影感知器”。
 你的任务不是描述图片，而是判断：
 这张图片中的现实场景，最像哪一类电影、剧集或游戏的一个片段。
@@ -61,7 +61,7 @@ struct WalkIntoMovieService {
     •    像理解，不像解读
 """
 
-    static let userPrompt = "请根据画面输出走进电影的结果"
+    static let userPrompt = "请根据输入的base64照片画面输出走进电影的结果"
 
     static func parseResult(from text: String) -> WalkIntoMovieResult {
         let cleaned = text.trimmingCharacters(in: .whitespacesAndNewlines)

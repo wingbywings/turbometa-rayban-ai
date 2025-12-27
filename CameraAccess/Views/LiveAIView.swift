@@ -118,20 +118,16 @@ struct LiveAIView: View {
                 }
             }
 
-            // 延迟启动录音，等待连接完成
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                if viewModel.isConnected {
-                    viewModel.startRecording()
-                }
-            }
+            attemptStartRecordingIfReady()
         }
         .onChange(of: viewModel.isConnected) { isConnected in
-            if isConnected && !viewModel.isRecording {
-                viewModel.startRecording()
-            }
             if !isConnected && viewModel.isRecording {
                 viewModel.stopRecording()
             }
+            attemptStartRecordingIfReady()
+        }
+        .onChange(of: isStreamReady) { _ in
+            attemptStartRecordingIfReady()
         }
         .onDisappear {
             // 停止 AI 对话和视频流
@@ -246,6 +242,21 @@ struct LiveAIView: View {
                 endPoint: .bottom
             )
         )
+    }
+
+    private var isStreamReady: Bool {
+        streamViewModel.streamingStatus == .streaming
+            && streamViewModel.hasReceivedFirstFrame
+            && streamViewModel.currentVideoFrame != nil
+    }
+
+    private var isReadyToStartRecording: Bool {
+        viewModel.isConnected && isStreamReady
+    }
+
+    private func attemptStartRecordingIfReady() {
+        guard isReadyToStartRecording else { return }
+        viewModel.startRecording()
     }
 
     private func errorOverlay(_ message: String) -> some View {

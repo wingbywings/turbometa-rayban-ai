@@ -85,7 +85,9 @@
 // MARK: - Walk Into Movie
 "movie.title" = "Walk Into Movie";
 "movie.analyzing" = "Sensing cinematic atmosphere...";
+"movie.connecting" = "Connecting video stream and AI...";
 "movie.ready" = "Ready, framing the scene...";
+"movie.start" = "Start";
 "movie.retry" = "Try Again";
 "movie.error.title" = "Recognition Failed";
 "movie.error.noframe" = "No clear frame yet. Please try again.";
