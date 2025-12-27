@@ -352,16 +352,35 @@ class OmniRealtimeService: NSObject {
         sendEvent(event)
     }
 
-    func sendImageAppend(_ image: UIImage, maxDimension: Int = 768, quality: Double = 0.8) {
-        let normalizedQuality = min(max(quality, 0.6), 0.95)
-        let resizedImage = resizeImage(image, maxDimension: maxDimension)
-        guard let imageData = resizedImage.jpegData(compressionQuality: normalizedQuality) else {
-            print("❌ [Omni] 无法压缩图片")
+    func sendImageAppend(
+        _ image: UIImage,
+        maxDimension: Int = 768,
+        quality: Double = 0.8,
+        maxImageBase64Length: Int? = nil
+    ) {
+        let base64Image: String?
+        if let maxImageBase64Length {
+            base64Image = encodeImageBase64WithinLimit(
+                image,
+                maxDimension: maxDimension,
+                quality: quality,
+                maxBase64Length: maxImageBase64Length
+            )
+        } else {
+            base64Image = encodeImageBase64(
+                image,
+                maxDimension: maxDimension,
+                quality: quality
+            )
+        }
+
+        guard let base64Image else {
+            print("❌ [Omni] Image too large to send within WebSocket limit")
+            onError?("Image too large to send. Please try again.")
             return
         }
-        let base64Image = imageData.base64EncodedString()
 
-        print("📸 [Omni] 发送图片: \(imageData.count) bytes")
+        print("📸 [Omni] 发送图片 (base64 length: \(base64Image.count))")
 
         let event: [String: Any] = [
             "event_id": generateEventId(),

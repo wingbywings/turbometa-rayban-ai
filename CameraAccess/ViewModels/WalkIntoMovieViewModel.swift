@@ -3,6 +3,7 @@
  * 走进电影 - 识别与语音输出
  */
 
+import AudioToolbox
 import Foundation
 import SwiftUI
 import UIKit
@@ -20,6 +21,8 @@ final class WalkIntoMovieViewModel: ObservableObject {
     private let qualitySettings: AIQualitySettings
     private var analysisTask: Task<Void, Never>?
     private var currentTranscript = ""
+    private var hasSentAudioPrimer = false
+    private let startSoundID: SystemSoundID = 1104
 
     init(apiKey: String, qualitySettings: AIQualitySettings = .shared) {
         self.qualitySettings = qualitySettings
@@ -57,6 +60,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
         isSocketConnecting = false
         isAnalyzing = false
         capturedImage = nil
+        hasSentAudioPrimer = false
     }
 
     private func setupCallbacks() {
@@ -117,6 +121,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
         streamReady: @escaping () -> Bool
     ) async {
         isAnalyzing = true
+        playStartSound()
         errorMessage = nil
         result = nil
         currentTranscript = ""
@@ -138,6 +143,9 @@ final class WalkIntoMovieViewModel: ObservableObject {
             resetConnection()
             return
         }
+
+        beginNewSession()
+        sendAudioPrimerIfNeeded()
 
         do {
             try await Task.sleep(nanoseconds: 1_000_000_000)
@@ -161,12 +169,17 @@ final class WalkIntoMovieViewModel: ObservableObject {
 
         let maxDimension = qualitySettings.aiImageMaxDimension.rawValue
         let quality = qualitySettings.aiImageQuality
-        omniService.sendUserMessage(
-            text: WalkIntoMovieService.userPrompt,
-            image: frame,
+        omniService.sendImageAppend(
+            frame,
             maxDimension: maxDimension,
             quality: quality,
             maxImageBase64Length: 200_000
+        )
+        omniService.sendUserMessage(
+            text: WalkIntoMovieService.userPrompt,
+            image: nil,
+            maxDimension: maxDimension,
+            quality: quality
         )
         omniService.requestResponse()
     }
@@ -214,5 +227,36 @@ final class WalkIntoMovieViewModel: ObservableObject {
         omniService.disconnect()
         isSocketConnected = false
         isSocketConnecting = false
+        hasSentAudioPrimer = false
+    }
+
+    private func beginNewSession() {
+        hasSentAudioPrimer = false
+        let sessionId = UUID().uuidString.prefix(8)
+        let instructions = """
+        \(WalkIntoMovieService.prompt)
+
+        【会话ID: \(sessionId)】
+        这是一次全新的会话，请忽略之前的对话和结果。
+        """
+        omniService.updateSessionInstructions(instructions)
+    }
+
+    private func sendAudioPrimerIfNeeded() {
+        guard !hasSentAudioPrimer else { return }
+        // Send a short silent buffer so image append is accepted by the realtime protocol.
+        let sampleRate = 24_000
+        let durationMs = 120
+        let sampleCount = max(1, sampleRate * durationMs / 1000)
+        let silenceSamples = [Int16](repeating: 0, count: sampleCount)
+        let silenceData = silenceSamples.withUnsafeBytes { Data($0) }
+        let base64Audio = silenceData.base64EncodedString()
+        omniService.sendAudioAppend(base64Audio)
+        omniService.commitAudioBuffer()
+        hasSentAudioPrimer = true
+    }
+
+    private func playStartSound() {
+        AudioServicesPlaySystemSound(startSoundID)
     }
 }

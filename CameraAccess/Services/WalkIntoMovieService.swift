@@ -6,7 +6,7 @@
 import Foundation
 
 struct WalkIntoMovieService {
-    static let prompt = """
+    static let prompt2 = """
 你是一位擅长“走进电影”的氛围识别器。根据图片里的环境、光线、场景与情绪判断它像哪部电影 / 剧集 / 游戏。
 
 请只输出两行文本：
@@ -18,7 +18,7 @@ struct WalkIntoMovieService {
 - 不要输出编号、引号、Markdown 或解释
 """
     
-    static let prompt2 = """
+    static let prompt = """
 你是一个“现实世界电影感知器”。
 你的任务不是描述图片，而是判断：
 这张图片中的现实场景，最像哪一类电影、剧集或游戏的一个片段。
@@ -39,6 +39,7 @@ struct WalkIntoMovieService {
 
 📤 输出格式（严格遵守）
 
+**使用中文**
 请只输出两行文本：
 第一行：一句话点题（示例：你现在像在《迷失东京》，这不是目的地，只是故事暂时停留的地方。）
 一句极短的电影式旁白，像影评中的空镜解说
