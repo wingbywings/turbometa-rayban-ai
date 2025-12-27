@@ -21,8 +21,8 @@
 "home.translate.subtitle" = "即时翻译";
 "home.livechat.title" = "Live Chat";
 "home.livechat.subtitle" = "纯语音对话";
-"home.leaneat.title" = "LeanEat";
-"home.leaneat.subtitle" = "卡路里识别";
+"home.movie.title" = "走进电影";
+"home.movie.subtitle" = "电影氛围识别";
 "home.wordlearn.title" = "WordLearn";
 "home.wordlearn.subtitle" = "单词学习";
 "home.livestream.title" = "直播";
@@ -50,6 +50,9 @@
 "livechat.device.notconnected.title" = "未连接RayBan Meta眼镜";
 "livechat.device.notconnected.message" = "请先在首页连接你的智能眼镜，\n然后再使用Live Chat功能";
 "livechat.device.backtohome" = "返回首页";
+"realtime.error.title" = "连接失败";
+"realtime.error.retry" = "重新连接";
+"realtime.error.exit" = "退出";
 
 // MARK: - Live Translate
 "livetranslate.title" = "实时翻译";
@@ -78,32 +81,18 @@
 // MARK: - Photo Preview
 "photo.share" = "分享";
 "photo.ai" = "AI 识别";
-"photo.nutrition" = "营养分析";
 
-// MARK: - LeanEat (Nutrition Analysis)
-"leaneat.title" = "营养分析";
-"leaneat.analyzing" = "分析中...";
-"leaneat.healthscore" = "健康评分";
-"leaneat.totalnutrition" = "总营养";
-"leaneat.calories" = "热量";
-"leaneat.protein" = "蛋白质";
-"leaneat.fat" = "脂肪";
-"leaneat.carbs" = "碳水";
-"leaneat.fiber" = "膳食纤维";
-"leaneat.sugar" = "糖分";
-"leaneat.foods" = "食物详情";
-"leaneat.suggestions" = "营养建议";
-"leaneat.portion" = "份量";
-"leaneat.rating.excellent" = "优秀";
-"leaneat.rating.good" = "良好";
-"leaneat.rating.fair" = "一般";
-"leaneat.rating.poor" = "较差";
-"leaneat.healthscore.excellent" = "非常健康";
-"leaneat.healthscore.good" = "比较健康";
-"leaneat.healthscore.fair" = "还不错";
-"leaneat.healthscore.poor" = "需要改善";
-"leaneat.error.title" = "分析失败";
-"leaneat.retry" = "重试";
+// MARK: - Walk Into Movie
+"movie.title" = "走进电影";
+"movie.analyzing" = "正在感知电影氛围...";
+"movie.ready" = "准备就绪，正在取景...";
+"movie.retry" = "再来一次";
+"movie.error.title" = "识别失败";
+"movie.error.noframe" = "未获取到清晰画面，请稍后重试";
+"movie.error.nostream" = "视频流尚未就绪，请稍后重试";
+"movie.device.notconnected.title" = "未连接RayBan Meta眼镜";
+"movie.device.notconnected.message" = "请先在首页连接你的智能眼镜，\n然后再使用走进电影功能";
+"movie.device.backtohome" = "返回首页";
 
 // MARK: - Vision Recognition
 "vision.title" = "AI 图像识别";
@@ -115,6 +104,9 @@
 "records.empty" = "暂无记录";
 "records.conversation" = "对话记录";
 "records.date" = "日期";
+"records.movie.title" = "走进电影";
+"records.movie.empty.title" = "暂无走进电影记录";
+"records.movie.empty.subtitle" = "功能即将上线";
 
 // MARK: - Gallery
 "gallery.title" = "图库";

@@ -88,6 +88,12 @@ struct LiveAIView: View {
                 controlsView
                 }
             }
+
+            if streamViewModel.hasActiveDevice,
+               viewModel.showError,
+               let message = viewModel.errorMessage {
+                errorOverlay(message)
+            }
         }
         .onAppear {
             // 只有设备连接时才启动功能
@@ -97,7 +103,7 @@ struct LiveAIView: View {
             }
 
             // 启动视频流
-            Task {
+            Task(priority: .utility) {
                 print("🎥 LiveAIView: 启动视频流")
                 await streamViewModel.handleStartStreaming(for: .liveAI)
             }
@@ -119,6 +125,14 @@ struct LiveAIView: View {
                 }
             }
         }
+        .onChange(of: viewModel.isConnected) { isConnected in
+            if isConnected && !viewModel.isRecording {
+                viewModel.startRecording()
+            }
+            if !isConnected && viewModel.isRecording {
+                viewModel.stopRecording()
+            }
+        }
         .onDisappear {
             // 停止 AI 对话和视频流
             print("🎥 LiveAIView: 停止 AI 对话和视频流")
@@ -127,15 +141,6 @@ struct LiveAIView: View {
                 if streamViewModel.streamingStatus != .stopped {
                     await streamViewModel.stopSession()
                 }
-            }
-        }
-        .alert(NSLocalizedString("error", comment: "Error"), isPresented: $viewModel.showError) {
-            Button(NSLocalizedString("ok", comment: "OK")) {
-                viewModel.dismissError()
-            }
-        } message: {
-            if let error = viewModel.errorMessage {
-                Text(error)
             }
         }
     }
@@ -241,6 +246,64 @@ struct LiveAIView: View {
                 endPoint: .bottom
             )
         )
+    }
+
+    private func errorOverlay(_ message: String) -> some View {
+        VStack {
+            Spacer()
+
+            VStack(alignment: .leading, spacing: AppSpacing.md) {
+                Text(NSLocalizedString("realtime.error.title", comment: "Connection error title"))
+                    .font(AppTypography.headline)
+                    .foregroundColor(.white)
+
+                Text(message)
+                    .font(AppTypography.subheadline)
+                    .foregroundColor(.white.opacity(0.85))
+
+                HStack(spacing: AppSpacing.sm) {
+                    Button {
+                        viewModel.dismissError()
+                        viewModel.connect()
+                    } label: {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: "arrow.clockwise")
+                            Text(NSLocalizedString("realtime.error.retry", comment: "Reconnect"))
+                        }
+                        .font(AppTypography.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, AppSpacing.md)
+                        .background(AppColors.liveAI)
+                        .cornerRadius(AppCornerRadius.lg)
+                    }
+
+                    Button {
+                        viewModel.dismissError()
+                        viewModel.disconnect()
+                        dismiss()
+                    } label: {
+                        HStack(spacing: AppSpacing.sm) {
+                            Image(systemName: "xmark")
+                            Text(NSLocalizedString("realtime.error.exit", comment: "Exit"))
+                        }
+                        .font(AppTypography.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, AppSpacing.md)
+                        .background(Color.white.opacity(0.18))
+                        .cornerRadius(AppCornerRadius.lg)
+                    }
+                }
+            }
+            .padding(AppSpacing.lg)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.black.opacity(0.7))
+            .cornerRadius(AppCornerRadius.lg)
+            .padding(.horizontal, AppSpacing.lg)
+            .padding(.bottom, AppSpacing.xl)
+        }
+        .transition(.move(edge: .bottom).combined(with: .opacity))
     }
 
     // MARK: - Device Not Connected View

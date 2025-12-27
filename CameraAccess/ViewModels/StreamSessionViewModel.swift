@@ -28,6 +28,7 @@ enum StreamScenario {
   case liveAI
   case liveStream
   case photo
+  case walkIntoMovie
   case defaultView
 }
 
@@ -53,7 +54,6 @@ class StreamSessionViewModel: ObservableObject {
   @Published var showPhotoPreview: Bool = false
   @Published var showVisionRecognition: Bool = false
   @Published var showOmniRealtime: Bool = false
-  @Published var showLeanEat: Bool = false
 
   private var timerTask: Task<Void, Never>?
   // The core DAT SDK StreamSession - handles all streaming operations
@@ -199,6 +199,8 @@ class StreamSessionViewModel: ObservableObject {
     case .liveStream:
       desiredResolution = mapResolutionSetting(qualitySettings.previewResolution)
     case .photo:
+      desiredResolution = .high
+    case .walkIntoMovie:
       desiredResolution = .high
     case .defaultView:
       desiredResolution = .low

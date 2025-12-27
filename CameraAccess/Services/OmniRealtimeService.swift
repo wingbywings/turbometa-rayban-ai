@@ -14,6 +14,7 @@ enum OmniClientEvent: String {
     case inputAudioBufferAppend = "input_audio_buffer.append"
     case inputAudioBufferCommit = "input_audio_buffer.commit"
     case inputImageBufferAppend = "input_image_buffer.append"
+    case conversationItemCreate = "conversation.item.create"
     case responseCreate = "response.create"
 }
 
@@ -370,6 +371,61 @@ class OmniRealtimeService: NSObject {
         sendEvent(event)
     }
 
+    func sendUserMessage(
+        text: String,
+        image: UIImage?,
+        maxDimension: Int = 768,
+        quality: Double = 0.8
+    ) {
+        var content: [[String: Any]] = []
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedText.isEmpty {
+            content.append([
+                "type": "input_text",
+                "text": trimmedText
+            ])
+        }
+
+        if let image,
+           let base64Image = encodeImageBase64(
+            image,
+            maxDimension: maxDimension,
+            quality: quality
+           ) {
+            content.append([
+                "type": "input_image",
+                "image": base64Image
+            ])
+        }
+
+        guard !content.isEmpty else {
+            print("⚠️ [Omni] 用户消息为空，跳过发送")
+            return
+        }
+
+        let event: [String: Any] = [
+            "event_id": generateEventId(),
+            "type": OmniClientEvent.conversationItemCreate.rawValue,
+            "item": [
+                "type": "message",
+                "role": "user",
+                "content": content
+            ]
+        ]
+        sendEvent(event)
+    }
+
+    func requestResponse() {
+        let event: [String: Any] = [
+            "event_id": generateEventId(),
+            "type": OmniClientEvent.responseCreate.rawValue,
+            "response": [
+                "modalities": ["text", "audio"]
+            ]
+        ]
+        sendEvent(event)
+    }
+
     func commitAudioBuffer() {
         let event: [String: Any] = [
             "event_id": generateEventId(),
@@ -431,7 +487,7 @@ class OmniRealtimeService: NSObject {
 
             case OmniServerEvent.responseAudioTranscriptDelta.rawValue:
                 if let delta = json["delta"] as? String {
-                    print("💬 [Omni] AI回复片段: \(delta)")
+//                    print("💬 [Omni] AI回复片段: \(delta)")
                     self.onTranscriptDelta?(delta)
                 }
 
@@ -585,6 +641,20 @@ class OmniRealtimeService: NSObject {
         return renderer.image { _ in
             image.draw(in: CGRect(origin: .zero, size: targetSize))
         }
+    }
+
+    private func encodeImageBase64(
+        _ image: UIImage,
+        maxDimension: Int,
+        quality: Double
+    ) -> String? {
+        let normalizedQuality = min(max(quality, 0.6), 0.95)
+        let resizedImage = resizeImage(image, maxDimension: maxDimension)
+        guard let imageData = resizedImage.jpegData(compressionQuality: normalizedQuality) else {
+            print("❌ [Omni] 无法压缩图片")
+            return nil
+        }
+        return imageData.base64EncodedString()
     }
 
     // MARK: - Helpers

@@ -13,7 +13,7 @@ struct TurboMetaHomeView: View {
     @State private var showLiveAI = false
     @State private var showLiveChat = false
     @State private var showLiveStream = false
-    @State private var showLeanEat = false
+    @State private var showWalkIntoMovie = false
     @State private var showLiveTranslate = false
 
     var body: some View {
@@ -70,12 +70,12 @@ struct TurboMetaHomeView: View {
                             // Row 2
                             HStack(spacing: AppSpacing.md) {
                                 FeatureCard(
-                                    title: NSLocalizedString("home.leaneat.title", comment: "LeanEat title"),
-                                    subtitle: NSLocalizedString("home.leaneat.subtitle", comment: "LeanEat subtitle"),
-                                    icon: "chart.bar.fill",
-                                    gradient: [AppColors.leanEat, AppColors.leanEat.opacity(0.7)]
+                                    title: NSLocalizedString("home.movie.title", comment: "Walk Into Movie title"),
+                                    subtitle: NSLocalizedString("home.movie.subtitle", comment: "Walk Into Movie subtitle"),
+                                    icon: "film",
+                                    gradient: [AppColors.walkIntoMovie, AppColors.walkIntoMovie.opacity(0.7)]
                                 ) {
-                                    showLeanEat = true
+                                    showWalkIntoMovie = true
                                 }
 
                                 FeatureCard(
@@ -113,8 +113,8 @@ struct TurboMetaHomeView: View {
             .fullScreenCover(isPresented: $showLiveStream) {
                 SimpleLiveStreamView(streamViewModel: streamViewModel)
             }
-            .fullScreenCover(isPresented: $showLeanEat) {
-                StreamView(viewModel: streamViewModel, wearablesVM: wearablesViewModel)
+            .fullScreenCover(isPresented: $showWalkIntoMovie) {
+                WalkIntoMovieView(streamViewModel: streamViewModel, apiKey: apiKey)
             }
             .fullScreenCover(isPresented: $showLiveTranslate) {
                 LiveTranslateView(streamViewModel: streamViewModel, apiKey: apiKey)

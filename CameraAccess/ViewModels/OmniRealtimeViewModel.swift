@@ -116,7 +116,7 @@ class OmniRealtimeViewModel: ObservableObject {
 
         omniService.onTranscriptDelta = { [weak self] delta in
             Task { @MainActor in
-                print("📝 [OmniVM] AI回复片段: \(delta)")
+//                print("📝 [OmniVM] AI回复片段: \(delta)")
                 self?.currentTranscript += delta
             }
         }

@@ -19,7 +19,7 @@
 TurboMeta is a full-featured multimodal AI assistant built exclusively for RayBan Meta smart glasses, powered by Alibaba Cloud's Qwen multimodal AI models:
 
 - 🎯 **Live AI Conversations**: Real-time multimodal interaction through glasses camera and microphone
-- 🍎 **Smart Nutrition Analysis**: Capture food photos and get detailed nutritional information and health recommendations
+- 🎬 **Walk Into Movie**: Capture a scene and get a cinematic reference plus atmospheric narration
 - 👁️ **Image Recognition**: Intelligently identify objects, scenes, and text in your field of view
 - 🎥 **Live Streaming**: Stream directly to platforms like Douyin, Kuaishou, and Xiaohongshu
 - 🌐 **Full Chinese Support**: Complete Chinese AI interaction experience, perfectly tailored for Chinese users
@@ -35,16 +35,15 @@ This is the world's first **fully Chinese-enabled** RayBan Meta AI assistant, br
 - **Natural Responses**: Smooth and natural Chinese conversation experience
 - **One-tap Hide**: Support for hiding conversation interface to focus on visual experience
 
-### 🍽️ LeanEat - Smart Nutrition Analysis
-- **Food Recognition**: Identify food types by taking photos
-- **Nutritional Content**: Detailed data on calories, protein, fat, carbohydrates, etc.
-- **Health Scoring**: Health scoring system from 0-100
-- **Nutrition Advice**: Personalized nutritional recommendations from AI
-- **Beautiful Interface**: Carefully designed UI with clear nutritional information display
+### 🎬 Walk Into Movie - Cinematic Atmosphere
+- **Auto Capture**: Starts a high-quality stream and grabs a frame after entry
+- **Scene Match**: Picks the movie/series/game vibe that fits the scene
+- **Atmosphere Narration**: One-line hook plus cinematic voiceover
+- **Voice Output**: Plays the narration aloud
 
 ### 📸 Real-time Photography
 - **Auto-start**: Automatically connects to glasses and starts preview when opened
-- **Multi-function Integration**: Choose nutrition analysis or AI recognition after taking photos
+- **Multi-function Integration**: Choose AI recognition after taking photos
 - **Smooth Experience**: Real-time video stream preview
 
 ### 🎥 Live Streaming
@@ -77,7 +76,7 @@ This is the world's first **fully Chinese-enabled** RayBan Meta AI assistant, br
 ### API Requirements
 You need to apply for the following Alibaba Cloud APIs:
 1. **Qwen Omni-Realtime API**: For real-time conversations
-2. **Qwen VL-Plus API**: For image recognition and nutrition analysis
+2. **Qwen VL-Plus API**: For image recognition and Walk Into Movie
 
 👉 [Apply for APIs at Alibaba Cloud](https://dashscope.aliyun.com/)
 
@@ -161,18 +160,18 @@ ios-deploy --bundle YourApp.app
 - Ask "What do you see?" to have AI describe the scene
 - AI responds in concise Chinese
 
-### LeanEat Nutrition Analysis
+### Walk Into Movie
 
-1. Tap the **LeanEat** card on the home screen
-2. Point at food and tap the camera button 📷
-3. In photo preview, tap **Nutrition Analysis**
-4. Wait for AI analysis to complete
-5. View nutritional content, health score, and recommendations
+1. Tap the **Walk Into Movie** card on the home screen
+2. The app starts a high-quality stream
+3. After 1 second, it captures a frame and analyzes the scene
+4. Listen to the cinematic one-liner and atmosphere narration
+5. Tap **Try Again** to generate a new result
 
 **Use Cases**:
-- Take photos before meals to understand nutritional content
-- Track daily intake when on a fitness diet
-- Learn about food nutrition
+- Generate a cinematic vibe for street walks
+- Add atmosphere to travel moments
+- Turn everyday scenes into story hooks
 
 ### Live Streaming
 
@@ -187,7 +186,7 @@ ios-deploy --bundle YourApp.app
   <tr>
     <td><b>Home</b></td>
     <td><b>Live AI</b></td>
-    <td><b>Nutrition Analysis</b></td>
+    <td><b>Walk Into Movie</b></td>
   </tr>
   <tr>
     <td><img src="./screenshots/home.png" width="200"/></td>
@@ -239,13 +238,13 @@ Customize AI response style in `OmniRealtimeService.swift`:
 3. Check if Alibaba Cloud API quota is sufficient
 4. Review console logs for errors
 
-### Q3: Nutrition analysis results inaccurate?
+### Q3: Walk Into Movie results feel off?
 
 **Solutions**:
-1. Ensure food photos are clear
-2. Take photos in good lighting
-3. Show food completely in frame
-4. AI analysis is for reference only, not a substitute for professional nutritionists
+1. Keep the frame steady and clear
+2. Capture in good lighting
+3. Include enough environment context
+4. Results are for entertainment only
 
 ### Q4: Cannot install on phone?
 
@@ -275,7 +274,7 @@ Customize AI response style in `OmniRealtimeService.swift`:
 
 ### ✅ Completed
 - [x] Live AI real-time conversations
-- [x] LeanEat nutrition analysis
+- [x] Walk Into Movie
 - [x] Image recognition
 - [x] Basic live streaming functionality
 - [x] Bilingual Chinese/English support

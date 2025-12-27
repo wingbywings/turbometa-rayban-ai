@@ -21,8 +21,8 @@
 "home.translate.subtitle" = "Instant Translation";
 "home.livechat.title" = "Live Chat";
 "home.livechat.subtitle" = "Audio-only AI";
-"home.leaneat.title" = "LeanEat";
-"home.leaneat.subtitle" = "Calorie Recognition";
+"home.movie.title" = "Walk Into Movie";
+"home.movie.subtitle" = "Cinematic Atmosphere";
 "home.wordlearn.title" = "WordLearn";
 "home.wordlearn.subtitle" = "Vocabulary Learning";
 "home.livestream.title" = "Live Stream";
@@ -50,6 +50,9 @@
 "livechat.device.notconnected.title" = "RayBan Meta Glasses Not Connected";
 "livechat.device.notconnected.message" = "Please connect your smart glasses on the home screen first,\\nthen use the Live Chat feature";
 "livechat.device.backtohome" = "Back to Home";
+"realtime.error.title" = "Connection Failed";
+"realtime.error.retry" = "Reconnect";
+"realtime.error.exit" = "Exit";
 
 // MARK: - Live Translate
 "livetranslate.title" = "Live Translate";
@@ -78,32 +81,18 @@
 // MARK: - Photo Preview
 "photo.share" = "Share";
 "photo.ai" = "AI Recognition";
-"photo.nutrition" = "Nutrition Analysis";
 
-// MARK: - LeanEat (Nutrition Analysis)
-"leaneat.title" = "Nutrition Analysis";
-"leaneat.analyzing" = "Analyzing...";
-"leaneat.healthscore" = "Health Score";
-"leaneat.totalnutrition" = "Total Nutrition";
-"leaneat.calories" = "Calories";
-"leaneat.protein" = "Protein";
-"leaneat.fat" = "Fat";
-"leaneat.carbs" = "Carbs";
-"leaneat.fiber" = "Fiber";
-"leaneat.sugar" = "Sugar";
-"leaneat.foods" = "Food Details";
-"leaneat.suggestions" = "Nutrition Advice";
-"leaneat.portion" = "Portion";
-"leaneat.rating.excellent" = "Excellent";
-"leaneat.rating.good" = "Good";
-"leaneat.rating.fair" = "Fair";
-"leaneat.rating.poor" = "Poor";
-"leaneat.healthscore.excellent" = "Very Healthy";
-"leaneat.healthscore.good" = "Quite Healthy";
-"leaneat.healthscore.fair" = "Not Bad";
-"leaneat.healthscore.poor" = "Needs Improvement";
-"leaneat.error.title" = "Analysis Failed";
-"leaneat.retry" = "Retry";
+// MARK: - Walk Into Movie
+"movie.title" = "Walk Into Movie";
+"movie.analyzing" = "Sensing cinematic atmosphere...";
+"movie.ready" = "Ready, framing the scene...";
+"movie.retry" = "Try Again";
+"movie.error.title" = "Recognition Failed";
+"movie.error.noframe" = "No clear frame yet. Please try again.";
+"movie.error.nostream" = "Video stream not ready yet. Please try again.";
+"movie.device.notconnected.title" = "RayBan Meta Glasses Not Connected";
+"movie.device.notconnected.message" = "Please connect your smart glasses on the home screen first,\\nthen use Walk Into Movie";
+"movie.device.backtohome" = "Back to Home";
 
 // MARK: - Vision Recognition
 "vision.title" = "AI Image Recognition";
@@ -115,6 +104,9 @@
 "records.empty" = "No Records";
 "records.conversation" = "Conversation History";
 "records.date" = "Date";
+"records.movie.title" = "Walk Into Movie";
+"records.movie.empty.title" = "No Walk Into Movie Records";
+"records.movie.empty.subtitle" = "Coming Soon";
 
 // MARK: - Gallery
 "gallery.title" = "Gallery";

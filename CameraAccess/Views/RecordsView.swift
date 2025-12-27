@@ -22,7 +22,7 @@ struct RecordsView: View {
                             selectedTab = 1
                         }
 
-                        RecordTabButton(title: "LeanEat", isSelected: selectedTab == 2) {
+                        RecordTabButton(title: NSLocalizedString("records.movie.title", comment: "Walk Into Movie records"), isSelected: selectedTab == 2) {
                             selectedTab = 2
                         }
                     }
@@ -39,9 +39,9 @@ struct RecordsView: View {
                     case 1:
                         TranslationRecordsView()
                     case 2:
-                        LeanEatRecordsView()
+                        WalkIntoMovieRecordsView()
                     default:
-                        LeanEatRecordsView()
+                        WalkIntoMovieRecordsView()
                     }
                 }
             }
@@ -336,24 +336,24 @@ struct ConversationCell: View {
     }
 }
 
-// MARK: - LeanEat Records
+// MARK: - Walk Into Movie Records
 
-struct LeanEatRecordsView: View {
+struct WalkIntoMovieRecordsView: View {
     var body: some View {
         ZStack {
             AppColors.secondaryBackground
                 .ignoresSafeArea()
 
             VStack(spacing: AppSpacing.lg) {
-                Image(systemName: "chart.bar.fill")
+                Image(systemName: "film")
                     .font(.system(size: 64))
-                    .foregroundColor(AppColors.leanEat.opacity(0.6))
+                    .foregroundColor(AppColors.walkIntoMovie.opacity(0.6))
 
-                Text("暂无卡路里识别记录")
+                Text(NSLocalizedString("records.movie.empty.title", comment: "No movie records title"))
                     .font(AppTypography.title2)
                     .foregroundColor(AppColors.textPrimary)
 
-                Text("功能即将上线")
+                Text(NSLocalizedString("records.movie.empty.subtitle", comment: "No movie records subtitle"))
                     .font(AppTypography.subheadline)
                     .foregroundColor(AppColors.textSecondary)
             }

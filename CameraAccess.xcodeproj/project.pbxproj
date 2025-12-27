@@ -25,7 +25,7 @@
 		4BA57ACF2EF8227E002EC214 /* VisionRecognitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57ABE2EF8227E002EC214 /* VisionRecognitionView.swift */; };
 		4BA57AD02EF8227E002EC214 /* APIKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A952EF8227E002EC214 /* APIKeyManager.swift */; };
 		4BA57AD12EF8227E002EC214 /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB82EF8227E002EC214 /* RegistrationView.swift */; };
-		4BA57AD22EF8227E002EC214 /* LeanEatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A8E2EF8227E002EC214 /* LeanEatService.swift */; };
+		4BA57AD22EF8227E002EC214 /* WalkIntoMovieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A8E2EF8227E002EC214 /* WalkIntoMovieService.swift */; };
 		4BA57AD32EF8227E002EC214 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB32EF8227E002EC214 /* MainTabView.swift */; };
 		4BA57AD42EF8227E002EC214 /* LiveAIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB12EF8227E002EC214 /* LiveAIView.swift */; };
 		4BA57B022EF8227E002EC214 /* LiveChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57B012EF8227E002EC214 /* LiveChatView.swift */; };
@@ -33,18 +33,18 @@
 		4BA57AD52EF8227E002EC214 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB22EF8227E002EC214 /* MainAppView.swift */; };
 		4BA57AD62EF8227E002EC214 /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AAD2EF8227E002EC214 /* DebugMenuView.swift */; };
 		4BA57AD72EF8227E002EC214 /* MockDeviceKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A982EF8227E002EC214 /* MockDeviceKitViewModel.swift */; };
-		4BA57AD82EF8227E002EC214 /* LeanEatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A9C2EF8227E002EC214 /* LeanEatViewModel.swift */; };
+		4BA57AD82EF8227E002EC214 /* WalkIntoMovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A9C2EF8227E002EC214 /* WalkIntoMovieViewModel.swift */; };
 		4BA57AD92EF8227E002EC214 /* VisionRecognitionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A9F2EF8227E002EC214 /* VisionRecognitionViewModel.swift */; };
 		4BA57ADA2EF8227E002EC214 /* WearablesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AA02EF8227E002EC214 /* WearablesViewModel.swift */; };
 		4BA57ADB2EF8227E002EC214 /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57ABC2EF8227E002EC214 /* StreamView.swift */; };
-		4BA57ADC2EF8227E002EC214 /* LeanEatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB02EF8227E002EC214 /* LeanEatView.swift */; };
+		4BA57ADC2EF8227E002EC214 /* WalkIntoMovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB02EF8227E002EC214 /* WalkIntoMovieView.swift */; };
 		4BA57ADD2EF8227E002EC214 /* PhotoPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB62EF8227E002EC214 /* PhotoPreviewView.swift */; };
 		4BA57ADE2EF8227E002EC214 /* StreamSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57ABB2EF8227E002EC214 /* StreamSessionView.swift */; };
 		4BA57ADF2EF8227E002EC214 /* MockDeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A992EF8227E002EC214 /* MockDeviceViewModel.swift */; };
 		4BA57AE02EF8227E002EC214 /* ConversationStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A8D2EF8227E002EC214 /* ConversationStorage.swift */; };
 		4BA57AE12EF8227E002EC214 /* SimpleLiveStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57ABA2EF8227E002EC214 /* SimpleLiveStreamView.swift */; };
 		4BA57AE22EF8227E002EC214 /* DebugMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A9B2EF8227E002EC214 /* DebugMenuViewModel.swift */; };
-		4BA57AE32EF8227E002EC214 /* FoodNutritionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A8B2EF8227E002EC214 /* FoodNutritionModel.swift */; };
+		4BA57AE32EF8227E002EC214 /* WalkIntoMovieModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A8B2EF8227E002EC214 /* WalkIntoMovieModel.swift */; };
 		4BA57AE42EF8227E002EC214 /* OmniRealtimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57AB52EF8227E002EC214 /* OmniRealtimeView.swift */; };
 		4BA57AE52EF8227E002EC214 /* VisionAPIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A902EF8227E002EC214 /* VisionAPIConfig.swift */; };
 		4BA57AE62EF8227E002EC214 /* TimeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA57A962EF8227E002EC214 /* TimeUtils.swift */; };
@@ -98,10 +98,10 @@
 		4BA57A872EF8227E002EC214 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		4BA57A8A2EF8227E002EC214 /* ConversationRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationRecord.swift; sourceTree = "<group>"; };
 		4BA57B102F8A1111002EC214 /* ConversationImageAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationImageAttachment.swift; sourceTree = "<group>"; };
-		4BA57A8B2EF8227E002EC214 /* FoodNutritionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodNutritionModel.swift; sourceTree = "<group>"; };
+		4BA57A8B2EF8227E002EC214 /* WalkIntoMovieModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkIntoMovieModel.swift; sourceTree = "<group>"; };
 		4BA57A8D2EF8227E002EC214 /* ConversationStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStorage.swift; sourceTree = "<group>"; };
 		4BA57B112F8A1111002EC214 /* ConversationImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationImageStorage.swift; sourceTree = "<group>"; };
-		4BA57A8E2EF8227E002EC214 /* LeanEatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanEatService.swift; sourceTree = "<group>"; };
+		4BA57A8E2EF8227E002EC214 /* WalkIntoMovieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkIntoMovieService.swift; sourceTree = "<group>"; };
 		4BA57A8F2EF8227E002EC214 /* OmniRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmniRealtimeService.swift; sourceTree = "<group>"; };
 		4BA57A902EF8227E002EC214 /* VisionAPIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionAPIConfig.swift; sourceTree = "<group>"; };
 		4BA57A912EF8227E002EC214 /* VisionAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionAPIService.swift; sourceTree = "<group>"; };
@@ -113,7 +113,7 @@
 		4BA57A982EF8227E002EC214 /* MockDeviceKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDeviceKitViewModel.swift; sourceTree = "<group>"; };
 		4BA57A992EF8227E002EC214 /* MockDeviceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDeviceViewModel.swift; sourceTree = "<group>"; };
 		4BA57A9B2EF8227E002EC214 /* DebugMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuViewModel.swift; sourceTree = "<group>"; };
-		4BA57A9C2EF8227E002EC214 /* LeanEatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanEatViewModel.swift; sourceTree = "<group>"; };
+		4BA57A9C2EF8227E002EC214 /* WalkIntoMovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkIntoMovieViewModel.swift; sourceTree = "<group>"; };
 		4BA57A9D2EF8227E002EC214 /* OmniRealtimeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OmniRealtimeViewModel.swift; sourceTree = "<group>"; };
 		4BA57A9E2EF8227E002EC214 /* StreamSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSessionViewModel.swift; sourceTree = "<group>"; };
 		4BA57A9F2EF8227E002EC214 /* VisionRecognitionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionRecognitionViewModel.swift; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		4BA57AAD2EF8227E002EC214 /* DebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
 		4BA57AAE2EF8227E002EC214 /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
 		4BA57AAF2EF8227E002EC214 /* HomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenView.swift; sourceTree = "<group>"; };
-		4BA57AB02EF8227E002EC214 /* LeanEatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanEatView.swift; sourceTree = "<group>"; };
+		4BA57AB02EF8227E002EC214 /* WalkIntoMovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkIntoMovieView.swift; sourceTree = "<group>"; };
 		4BA57AB12EF8227E002EC214 /* LiveAIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveAIView.swift; sourceTree = "<group>"; };
 		4BA57B012EF8227E002EC214 /* LiveChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChatView.swift; sourceTree = "<group>"; };
 		4BA57B1A2F8A2222002EC214 /* LiveTranslateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTranslateView.swift; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 			children = (
 				4BA57A8A2EF8227E002EC214 /* ConversationRecord.swift */,
 				4BA57B102F8A1111002EC214 /* ConversationImageAttachment.swift */,
-				4BA57A8B2EF8227E002EC214 /* FoodNutritionModel.swift */,
+				4BA57A8B2EF8227E002EC214 /* WalkIntoMovieModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -199,7 +199,7 @@
 			children = (
 				4BA57A8D2EF8227E002EC214 /* ConversationStorage.swift */,
 				4BA57B112F8A1111002EC214 /* ConversationImageStorage.swift */,
-				4BA57A8E2EF8227E002EC214 /* LeanEatService.swift */,
+				4BA57A8E2EF8227E002EC214 /* WalkIntoMovieService.swift */,
 				4BA57A8F2EF8227E002EC214 /* OmniRealtimeService.swift */,
 				4BA57A902EF8227E002EC214 /* VisionAPIConfig.swift */,
 				4BA57A912EF8227E002EC214 /* VisionAPIService.swift */,
@@ -241,7 +241,7 @@
 			children = (
 				4BA57A9A2EF8227E002EC214 /* MockDeviceKit */,
 				4BA57A9B2EF8227E002EC214 /* DebugMenuViewModel.swift */,
-				4BA57A9C2EF8227E002EC214 /* LeanEatViewModel.swift */,
+				4BA57A9C2EF8227E002EC214 /* WalkIntoMovieViewModel.swift */,
 				4BA57A9D2EF8227E002EC214 /* OmniRealtimeViewModel.swift */,
 				4BA57A9E2EF8227E002EC214 /* StreamSessionViewModel.swift */,
 				4BA57A9F2EF8227E002EC214 /* VisionRecognitionViewModel.swift */,
@@ -283,7 +283,7 @@
 				4BA57AAE2EF8227E002EC214 /* GalleryView.swift */,
 				4BA57AAF2EF8227E002EC214 /* HomeScreenView.swift */,
 				4BA57B072EF8227E002EC214 /* AIQualitySettingsView.swift */,
-				4BA57AB02EF8227E002EC214 /* LeanEatView.swift */,
+				4BA57AB02EF8227E002EC214 /* WalkIntoMovieView.swift */,
 				4BA57AB12EF8227E002EC214 /* LiveAIView.swift */,
 				4BA57B012EF8227E002EC214 /* LiveChatView.swift */,
 				4BA57B1A2F8A2222002EC214 /* LiveTranslateView.swift */,
@@ -486,7 +486,7 @@
 				4BA57ACF2EF8227E002EC214 /* VisionRecognitionView.swift in Sources */,
 				4BA57AD02EF8227E002EC214 /* APIKeyManager.swift in Sources */,
 				4BA57AD12EF8227E002EC214 /* RegistrationView.swift in Sources */,
-				4BA57AD22EF8227E002EC214 /* LeanEatService.swift in Sources */,
+				4BA57AD22EF8227E002EC214 /* WalkIntoMovieService.swift in Sources */,
 				4BA57AD32EF8227E002EC214 /* MainTabView.swift in Sources */,
 				4BA57AD42EF8227E002EC214 /* LiveAIView.swift in Sources */,
 				4BA57B082EF8227E002EC214 /* AIQualitySettingsView.swift in Sources */,
@@ -495,11 +495,11 @@
 				4BA57AD52EF8227E002EC214 /* MainAppView.swift in Sources */,
 				4BA57AD62EF8227E002EC214 /* DebugMenuView.swift in Sources */,
 				4BA57AD72EF8227E002EC214 /* MockDeviceKitViewModel.swift in Sources */,
-				4BA57AD82EF8227E002EC214 /* LeanEatViewModel.swift in Sources */,
+				4BA57AD82EF8227E002EC214 /* WalkIntoMovieViewModel.swift in Sources */,
 				4BA57AD92EF8227E002EC214 /* VisionRecognitionViewModel.swift in Sources */,
 				4BA57ADA2EF8227E002EC214 /* WearablesViewModel.swift in Sources */,
 				4BA57ADB2EF8227E002EC214 /* StreamView.swift in Sources */,
-				4BA57ADC2EF8227E002EC214 /* LeanEatView.swift in Sources */,
+				4BA57ADC2EF8227E002EC214 /* WalkIntoMovieView.swift in Sources */,
 				4BA57ADD2EF8227E002EC214 /* PhotoPreviewView.swift in Sources */,
 				4BA57ADE2EF8227E002EC214 /* StreamSessionView.swift in Sources */,
 				4BA57ADF2EF8227E002EC214 /* MockDeviceViewModel.swift in Sources */,
@@ -507,7 +507,7 @@
 				4BA57B132F8A1111002EC214 /* ConversationImageStorage.swift in Sources */,
 				4BA57AE12EF8227E002EC214 /* SimpleLiveStreamView.swift in Sources */,
 				4BA57AE22EF8227E002EC214 /* DebugMenuViewModel.swift in Sources */,
-				4BA57AE32EF8227E002EC214 /* FoodNutritionModel.swift in Sources */,
+				4BA57AE32EF8227E002EC214 /* WalkIntoMovieModel.swift in Sources */,
 				4BA57AE42EF8227E002EC214 /* OmniRealtimeView.swift in Sources */,
 				4BA57AE52EF8227E002EC214 /* VisionAPIConfig.swift in Sources */,
 				4BA57AE62EF8227E002EC214 /* TimeUtils.swift in Sources */,

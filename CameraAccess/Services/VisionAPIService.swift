@@ -60,8 +60,18 @@ struct VisionAPIService {
 
     /// Analyze image and get description
     func analyzeImage(_ image: UIImage, prompt: String = "图中描绘的是什么景象?") async throws -> String {
-        // Convert image to base64
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+        return try await analyzeImage(image, prompt: prompt, maxDimension: nil, quality: nil)
+    }
+
+    func analyzeImage(
+        _ image: UIImage,
+        prompt: String,
+        maxDimension: Int?,
+        quality: Double?
+    ) async throws -> String {
+        let normalizedQuality = quality.map { min(max($0, 0.4), 0.95) } ?? 0.8
+        let resizedImage = maxDimension.map { resizeImage(image, maxDimension: $0) } ?? image
+        guard let imageData = resizedImage.jpegData(compressionQuality: normalizedQuality) else {
             throw VisionAPIError.invalidImage
         }
 
@@ -126,6 +136,21 @@ struct VisionAPIService {
 
         let decoder = JSONDecoder()
         return try decoder.decode(ChatCompletionResponse.self, from: data)
+    }
+
+    private func resizeImage(_ image: UIImage, maxDimension: Int) -> UIImage {
+        guard maxDimension > 0 else { return image }
+        let size = image.size
+        let maxSide = max(size.width, size.height)
+
+        guard maxSide > CGFloat(maxDimension) else { return image }
+
+        let scale = CGFloat(maxDimension) / maxSide
+        let targetSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 }
 
