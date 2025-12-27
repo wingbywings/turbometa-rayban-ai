@@ -62,7 +62,7 @@ struct WalkIntoMovieService {
     •    像理解，不像解读
 """
 
-    static let userPrompt = "请根据输入的base64照片画面输出走进电影的结果"
+    static let userPrompt = "请根据输入的照片画面输出走进电影的结果"
 
     static func parseResult(from text: String) -> WalkIntoMovieResult {
         let cleaned = text.trimmingCharacters(in: .whitespacesAndNewlines)
