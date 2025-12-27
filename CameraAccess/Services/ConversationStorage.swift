@@ -89,3 +89,70 @@ class ConversationStorage {
         return loadAllConversations().first { $0.id == id }
     }
 }
+
+// MARK: - Walk Into Movie Storage
+
+class WalkIntoMovieStorage {
+    static let shared = WalkIntoMovieStorage()
+
+    private let userDefaults = UserDefaults.standard
+    private let recordsKey = "walkIntoMovieRecords"
+    private let maxRecords = 100
+
+    private init() {}
+
+    func saveRecord(_ record: WalkIntoMovieRecord) {
+        var records = loadAllRecords()
+        records.insert(record, at: 0)
+
+        if records.count > maxRecords {
+            let trimmedRecords = records.suffix(from: maxRecords)
+            records = Array(records.prefix(maxRecords))
+            trimmedRecords.forEach { deleteImages(in: $0) }
+        }
+
+        if let encoded = try? JSONEncoder().encode(records) {
+            userDefaults.set(encoded, forKey: recordsKey)
+            print("💾 [Storage] 保存走进电影记录成功: \(record.id), 总数: \(records.count)")
+        } else {
+            print("❌ [Storage] 保存走进电影记录失败")
+        }
+    }
+
+    func loadAllRecords() -> [WalkIntoMovieRecord] {
+        guard let data = userDefaults.data(forKey: recordsKey),
+              let records = try? JSONDecoder().decode([WalkIntoMovieRecord].self, from: data) else {
+            print("📂 [Storage] 无走进电影记录或解码失败")
+            return []
+        }
+
+        print("📂 [Storage] 加载走进电影记录成功: \(records.count) 条")
+        return records
+    }
+
+    func deleteRecord(_ id: UUID) {
+        var records = loadAllRecords()
+        if let record = records.first(where: { $0.id == id }) {
+            deleteImages(in: record)
+        }
+        records.removeAll { $0.id == id }
+
+        if let encoded = try? JSONEncoder().encode(records) {
+            userDefaults.set(encoded, forKey: recordsKey)
+            print("🗑️ [Storage] 删除走进电影记录成功: \(id)")
+        }
+    }
+
+    func deleteAllRecords() {
+        let records = loadAllRecords()
+        records.forEach { deleteImages(in: $0) }
+        userDefaults.removeObject(forKey: recordsKey)
+        print("🗑️ [Storage] 清空走进电影记录")
+    }
+
+    private func deleteImages(in record: WalkIntoMovieRecord) {
+        if let attachment = record.imageAttachment {
+            ConversationImageStorage.shared.deleteImages([attachment])
+        }
+    }
+}

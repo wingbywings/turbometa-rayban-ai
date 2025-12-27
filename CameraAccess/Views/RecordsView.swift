@@ -263,6 +263,21 @@ class ConversationListViewModel: ObservableObject {
     }
 }
 
+@MainActor
+class WalkIntoMovieRecordListViewModel: ObservableObject {
+    @Published var records: [WalkIntoMovieRecord] = []
+
+    func loadRecords() {
+        records = WalkIntoMovieStorage.shared.loadAllRecords()
+        print("📱 [RecordsView] 加载走进电影记录: \(records.count) 条")
+    }
+
+    func deleteRecord(_ id: UUID) {
+        WalkIntoMovieStorage.shared.deleteRecord(id)
+        loadRecords()
+    }
+}
+
 // MARK: - Conversation Cell
 
 struct ConversationCell: View {
@@ -336,26 +351,211 @@ struct ConversationCell: View {
     }
 }
 
+// MARK: - Walk Into Movie Record Cell
+
+struct WalkIntoMovieRecordCell: View {
+    let record: WalkIntoMovieRecord
+
+    var body: some View {
+        HStack(alignment: .top, spacing: AppSpacing.md) {
+            WalkIntoMovieRecordThumbnail(attachment: record.imageAttachment)
+
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                Text(record.title)
+                    .font(AppTypography.headline)
+                    .foregroundColor(AppColors.textPrimary)
+                    .lineLimit(1)
+
+                if !record.summary.isEmpty {
+                    Text(record.summary)
+                        .font(AppTypography.subheadline)
+                        .foregroundColor(AppColors.textSecondary)
+                        .lineLimit(2)
+                }
+
+                HStack(spacing: AppSpacing.xs) {
+                    Image(systemName: "clock")
+                        .font(AppTypography.caption)
+                    Text(record.formattedDate)
+                        .font(AppTypography.caption)
+                }
+                .foregroundColor(AppColors.textSecondary)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(AppTypography.caption)
+                .foregroundColor(AppColors.textTertiary)
+        }
+        .padding(AppSpacing.md)
+        .background(AppColors.tertiaryBackground)
+        .cornerRadius(AppCornerRadius.lg)
+        .shadow(color: AppShadow.small(), radius: 4, x: 0, y: 2)
+    }
+}
+
+struct WalkIntoMovieRecordThumbnail: View {
+    let attachment: ConversationImageAttachment?
+
+    var body: some View {
+        Group {
+            if let attachment,
+               let image = ConversationImageStorage.shared.loadPreviewImage(attachment) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: AppCornerRadius.md)
+                        .fill(AppColors.secondaryBackground)
+                    Image(systemName: "film")
+                        .font(.system(size: 22))
+                        .foregroundColor(AppColors.walkIntoMovie.opacity(0.6))
+                }
+            }
+        }
+        .frame(width: 96, height: 72)
+        .clipped()
+        .cornerRadius(AppCornerRadius.md)
+        .overlay(
+            RoundedRectangle(cornerRadius: AppCornerRadius.md)
+                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        )
+    }
+}
+
 // MARK: - Walk Into Movie Records
 
 struct WalkIntoMovieRecordsView: View {
+    @StateObject private var viewModel = WalkIntoMovieRecordListViewModel()
+    @State private var selectedRecord: WalkIntoMovieRecord?
+
     var body: some View {
         ZStack {
             AppColors.secondaryBackground
                 .ignoresSafeArea()
 
-            VStack(spacing: AppSpacing.lg) {
-                Image(systemName: "film")
-                    .font(.system(size: 64))
-                    .foregroundColor(AppColors.walkIntoMovie.opacity(0.6))
+            if viewModel.records.isEmpty {
+                VStack(spacing: AppSpacing.lg) {
+                    Image(systemName: "film")
+                        .font(.system(size: 64))
+                        .foregroundColor(AppColors.walkIntoMovie.opacity(0.6))
 
-                Text(NSLocalizedString("records.movie.empty.title", comment: "No movie records title"))
-                    .font(AppTypography.title2)
-                    .foregroundColor(AppColors.textPrimary)
+                    Text(NSLocalizedString("records.movie.empty.title", comment: "No movie records title"))
+                        .font(AppTypography.title2)
+                        .foregroundColor(AppColors.textPrimary)
 
-                Text(NSLocalizedString("records.movie.empty.subtitle", comment: "No movie records subtitle"))
-                    .font(AppTypography.subheadline)
-                    .foregroundColor(AppColors.textSecondary)
+                    Text(NSLocalizedString("records.movie.empty.subtitle", comment: "No movie records subtitle"))
+                        .font(AppTypography.subheadline)
+                        .foregroundColor(AppColors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, AppSpacing.xl)
+                }
+            } else {
+                List {
+                    ForEach(viewModel.records) { record in
+                        WalkIntoMovieRecordCell(record: record)
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedRecord = record
+                            }
+                    }
+                    .onDelete(perform: deleteRecords)
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(AppColors.secondaryBackground)
+                .refreshable {
+                    viewModel.loadRecords()
+                }
+            }
+        }
+        .onAppear {
+            viewModel.loadRecords()
+        }
+        .sheet(item: $selectedRecord) { record in
+            WalkIntoMovieRecordDetailView(record: record)
+        }
+    }
+
+    private func deleteRecords(at offsets: IndexSet) {
+        for index in offsets {
+            let record = viewModel.records[index]
+            viewModel.deleteRecord(record.id)
+        }
+    }
+}
+
+struct WalkIntoMovieRecordDetailView: View {
+    let record: WalkIntoMovieRecord
+    @Environment(\.dismiss) private var dismiss
+    @State private var selectedAttachment: ConversationImageAttachment?
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+                AppColors.secondaryBackground
+                    .ignoresSafeArea()
+
+                ScrollView {
+                    VStack(alignment: .leading, spacing: AppSpacing.lg) {
+                        if let attachment = record.imageAttachment,
+                           let image = ConversationImageStorage.shared.loadOriginalImage(attachment) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 220)
+                                .clipped()
+                                .cornerRadius(AppCornerRadius.lg)
+                                .onTapGesture {
+                                    selectedAttachment = attachment
+                                }
+                        }
+
+                        VStack(alignment: .leading, spacing: AppSpacing.md) {
+                            if !record.headline.isEmpty {
+                                Text(record.headline)
+                                    .font(AppTypography.title2)
+                                    .foregroundColor(AppColors.textPrimary)
+                            }
+
+                            if !record.narration.isEmpty {
+                                Text(record.narration)
+                                    .font(AppTypography.body)
+                                    .foregroundColor(AppColors.textSecondary)
+                            } else if !record.rawText.isEmpty {
+                                Text(record.rawText)
+                                    .font(AppTypography.body)
+                                    .foregroundColor(AppColors.textSecondary)
+                            }
+                        }
+
+                        HStack(spacing: AppSpacing.xs) {
+                            Image(systemName: "clock")
+                                .font(AppTypography.caption)
+                            Text(record.formattedDate)
+                                .font(AppTypography.caption)
+                        }
+                        .foregroundColor(AppColors.textSecondary)
+                    }
+                    .padding(AppSpacing.lg)
+                }
+            }
+            .navigationTitle(NSLocalizedString("records.movie.title", comment: "Walk Into Movie records"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(NSLocalizedString("done", comment: "Done")) {
+                        dismiss()
+                    }
+                }
+            }
+            .sheet(item: $selectedAttachment) { attachment in
+                ConversationImageViewer(attachment: attachment)
             }
         }
     }

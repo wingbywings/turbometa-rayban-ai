@@ -108,7 +108,7 @@
 "records.date" = "Date";
 "records.movie.title" = "Walk Into Movie";
 "records.movie.empty.title" = "No Walk Into Movie Records";
-"records.movie.empty.subtitle" = "Coming Soon";
+"records.movie.empty.subtitle" = "Use Walk Into Movie to see records here";
 
 // MARK: - Gallery
 "gallery.title" = "Gallery";

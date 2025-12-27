@@ -23,6 +23,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
     private var currentTranscript = ""
     private var hasSentAudioPrimer = false
     private let startSoundID: SystemSoundID = 1104
+    private var hasSavedRecord = false
 
     init(apiKey: String, qualitySettings: AIQualitySettings = .shared) {
         self.qualitySettings = qualitySettings
@@ -61,6 +62,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
         isAnalyzing = false
         capturedImage = nil
         hasSentAudioPrimer = false
+        hasSavedRecord = false
     }
 
     private func setupCallbacks() {
@@ -88,6 +90,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
                     print("[WalkIntoMovie] AI response: \(finalText)")
                 }
                 self.result = WalkIntoMovieService.parseResult(from: finalText)
+                self.saveRecordIfNeeded()
                 self.isAnalyzing = false
             }
         }
@@ -126,6 +129,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
         result = nil
         currentTranscript = ""
         capturedImage = nil
+        hasSavedRecord = false
 
         connectIfNeeded()
 
@@ -232,6 +236,7 @@ final class WalkIntoMovieViewModel: ObservableObject {
 
     private func beginNewSession() {
         hasSentAudioPrimer = false
+        hasSavedRecord = false
         let sessionId = UUID().uuidString.prefix(8)
         let instructions = """
         \(WalkIntoMovieService.prompt)
@@ -254,6 +259,33 @@ final class WalkIntoMovieViewModel: ObservableObject {
         omniService.sendAudioAppend(base64Audio)
         omniService.commitAudioBuffer()
         hasSentAudioPrimer = true
+    }
+
+    private func saveRecordIfNeeded() {
+        guard !hasSavedRecord else { return }
+        guard let result else { return }
+        let trimmedText = result.rawText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else { return }
+
+        let imageAttachment: ConversationImageAttachment?
+        if let capturedImage {
+            imageAttachment = ConversationImageStorage.shared.saveAttachment(
+                capturedImage,
+                aiMaxDimension: qualitySettings.aiImageMaxDimension.rawValue,
+                aiQuality: qualitySettings.aiImageQuality
+            )
+        } else {
+            imageAttachment = nil
+        }
+
+        let record = WalkIntoMovieRecord(
+            headline: result.headline,
+            narration: result.narration,
+            rawText: result.rawText,
+            imageAttachment: imageAttachment
+        )
+        WalkIntoMovieStorage.shared.saveRecord(record)
+        hasSavedRecord = true
     }
 
     private func playStartSound() {

@@ -20,8 +20,7 @@ struct LiveChatView: View {
 
     var body: some View {
         ZStack {
-            Color.black
-                .ignoresSafeArea()
+            liveChatBackground
 
             if !streamViewModel.hasActiveDevice {
                 deviceNotConnectedView
@@ -299,6 +298,38 @@ struct LiveChatView: View {
             }
             .padding(.horizontal, AppSpacing.xl)
             .padding(.bottom, AppSpacing.xl)
+        }
+    }
+
+    private var liveChatBackground: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.black,
+                    AppColors.translate.opacity(0.22),
+                    Color.black
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            GeometryReader { proxy in
+                let size = proxy.size
+
+                Circle()
+                    .fill(AppColors.translate.opacity(0.18))
+                    .frame(width: size.width * 0.85, height: size.width * 0.85)
+                    .position(x: size.width * 0.8, y: size.height * 0.2)
+                    .blur(radius: 48)
+
+                Circle()
+                    .fill(AppColors.translate.opacity(0.14))
+                    .frame(width: size.width * 0.6, height: size.width * 0.6)
+                    .position(x: size.width * 0.15, y: size.height * 0.85)
+                    .blur(radius: 56)
+            }
+            .ignoresSafeArea()
         }
     }
 

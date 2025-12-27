@@ -108,7 +108,7 @@
 "records.date" = "日期";
 "records.movie.title" = "走进电影";
 "records.movie.empty.title" = "暂无走进电影记录";
-"records.movie.empty.subtitle" = "功能即将上线";
+"records.movie.empty.subtitle" = "使用走进电影后记录将显示在这里";
 
 // MARK: - Gallery
 "gallery.title" = "图库";
